@@ -1,0 +1,10 @@
+{
+  "/server": {
+    "target": "http://localhost:3333",
+    "secure": false
+  },
+  "/server-api": {
+    "target": "http://localhost:3333",
+    "secure": false
+  }
+}

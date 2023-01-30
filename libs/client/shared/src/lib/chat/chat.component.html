@@ -1,0 +1,63 @@
+<div class="w-full h-full flex flex-col">
+  <div class="h-5/6 w-full p-2 overflow-auto" #scrollMe>
+    <div *ngFor="let chat of _messageList; let last = last" class="w-full">
+      <ng-container *ngIf="chat.from === this.currentUser?.id;else contactMsg">
+        <div class="p-2 flex justify-end">
+          <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : currentUser?.username, image : currentUser?.image}"></my-chat-app-card>
+        </div>
+      </ng-container>
+      <ng-template #contactMsg>
+        <div class="p-2 flex justify-start">
+          <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : contactUser?.username, image : contactUser?.image}"></my-chat-app-card>
+        </div>
+      </ng-template>
+    </div>
+    <div *ngIf="!contactUser" class="w-full h-full flex justify-center items-center">
+      <h3 class="text-slate-500">Select your friend to chat 💬</h3>
+    </div>
+  </div>
+  <div class="h-1/6 w-full p-2">
+    <div class="w-full h-full" *ngIf="contactUser">
+      <mat-form-field appearance="fill" class="w-11/12">
+        <mat-label>{{messageText}}</mat-label>
+        <input matInput [(ngModel)]="message">
+        <button class="p-2 dark:text-black" (click)="togglePicker()"  matSuffix mat-fab-button [matMenuTriggerFor]="menu"><mat-icon>sentiment_very_satisfied</mat-icon></button>
+      </mat-form-field>
+      <button class="w-1/12 p-2" (click)="send()" matSuffix mat-fab-button><mat-icon color="text-gray-800">send</mat-icon></button>
+    </div>
+  </div>
+</div>
+
+<mat-menu #menu="matMenu">
+  <!-- <ngx-emoj
+      class="emoji"
+      *ngIf="pickerIsOpened"
+      (onemojipick)="handleEmoji($event)"
+      [width]="'100%'"
+      [height]="'50vh'"
+      [theme]="{
+          martShowHeader: true,
+          martShowFooter: false,
+          martHeaderPadding: {x: '0', y: '0'},
+          martFooterPadding: {x: '0', y: '0'},
+          martHeaderFontSize: '14px',
+          martHeaderBG: '#e3e7e8',
+          martFooterBG: '#e3e7e8',
+          martBG: '#ebeff2',
+          martCategoryColor: '#94a0a6',
+          martCategoryColorActive: '#455a64',
+          martActiveCategoryIndicatorColor: '#00897b',
+          martEmojiFontSize: '150%',
+          martCategoryFontSize: '20px',
+          martBorderRadius: '5px',
+          martActiveCategoryIndicatorHeight: '4px',
+          martEmojiPadding: {x: '40px', y: '40px'}
+      }"
+      [maxRecentEmoji]="'10'"
+      [recentEmojiStoreKey]="'emoji'"
+      [searchEmojiPlaceholderText]="'Search emoji..'"
+      [emojiNotFoundText]="'Emoji not found.'"
+    >
+  </ngx-emoj> -->
+</mat-menu>
+
