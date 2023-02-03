@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ToggleService {
-   darkmode = false;
+  public darkmode = false;
 
     toggle(){
       this.darkmode = !this.darkmode;

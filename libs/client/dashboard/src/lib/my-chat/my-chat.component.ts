@@ -18,7 +18,7 @@ export class MyChatComponent {
   sendMessage$: any = new Subject();
   cardClick$: any = new Subject();
   contactUser:any;
-  messageList : any = [];
+  messageList : any[] = [];
   private readonly destroy$ = new Subject<void>();
   private readonly userService = inject(UserService);
    readonly authService = inject(AuthService);
@@ -38,7 +38,6 @@ ngAfterViewInit(){
   }
   this.userService.chat$.pipe(takeUntil(this.destroy$)).subscribe((message:any)=>{
         this.messageList = [...this.messageList, message];
-        console.log(message,this.messageList)
         this.changeDetection.detectChanges();
   });
 
@@ -63,22 +62,19 @@ ngAfterViewInit(){
       to : contact_id
     };
 
-    this.userService.chat(data).subscribe((res:any)=>{return})
+    this.userService.chat(data);
   });
   }
 
   startChat(contactUser:any)  {
-    console.log(contactUser);
-    
     this.contactUser = contactUser;
     this.messageList = [];
     const user_id = this.authService.currentUser()?.id;
 
     const contact_id = this.contactUser?.id;
-    console.log(contact_id,user_id);
     // generate room id to create room
     this.userService.getChats({user_id,contact_id}).subscribe((res:any)=>{
-      this.messageList = res;
+      this.messageList = res;      
       this.changeDetection.detectChanges();
     });
     this.userService.connectWs(this.userService.generateRoomID(user_id,contact_id));

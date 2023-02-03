@@ -4,7 +4,8 @@ import { map, switchMap, iif, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { injectConfig } from '../core.di';
 import { HttpService } from '../utils/http.service';
-import { io } from "socket.io-client";
+import io, { Socket } from 'socket.io-client';
+
 
 
 @Injectable({
@@ -17,19 +18,7 @@ export class UserService {
   private readonly url = injectConfig();
 
   readonly chat$ = this.chatMessage$.asObservable();
-  EVENTS = {
-    connection: "connection",
-    CLIENT: {
-      CREATE_ROOM: "CREATE_ROOM",
-      SEND_ROOM_MESSAGE: "SEND_ROOM_MESSAGE",
-      NOTIFICATION: "NOTIFICATION"
-    },
-  };
-
-  socket = io(this.url.API_URL,{
-    withCredentials: true,
-  });
-
+  socket !: Socket;
 
 
   findUser(data:Pick<User, 'username'>) {
@@ -67,21 +56,28 @@ export class UserService {
   }
 
   connectWs(id : any){
-
-      this.socket.emit(this.EVENTS.CLIENT.CREATE_ROOM,{roomName:id});
-      this.socket.on(
-        this.EVENTS.CLIENT.SEND_ROOM_MESSAGE,(message)=>{
+        this.socket = io(this.url.WS_URL,{
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000,
+          autoConnect: true,
+          withCredentials: true
+        });
+        this.socket.emit('join',{id});
+        this.socket.on("broadcast",(message:any)=>{
           this.chatMessage$.next(message);
-      });
+        })
+        this.socket.on("error", (error:any) => {
+            console.log(error);
+        });
     
   }
 
   chat(data:any){
-    return this.http.post(this.url.API_URL,data)
+    this.socket.emit("message",data);
   }
 
   getChats(data:any){
-    return this.http.post('/message',data).pipe(map((res:object)=> data?.messages));
+    return this.http.post('/message',data).pipe(map((res:any)=> res?.data?.messages));
   }
 
 

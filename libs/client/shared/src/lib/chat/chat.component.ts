@@ -5,18 +5,19 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ChangeDetectionStrategy, Component, inject, ViewChild, EventEmitter, Output, Input, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { ViewEncapsulation, ChangeDetectionStrategy, Component, inject, ViewChild, EventEmitter, Output, Input, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToggleService } from '@client/core';
-// import  {  NgxEmojModule  }  from  'ngx-emoj';
 import {MatMenu, MatMenuModule} from '@angular/material/menu';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 @Component({
   selector: 'my-chat-app-chat',
   standalone: true,
-  imports: [CommonModule,MatFormFieldModule,MatInputModule,MatIconModule,FormsModule,MatMenuModule,MatButtonModule,CardComponent], //NgxEmojModule
+  imports: [CommonModule,MatFormFieldModule,MatInputModule,MatIconModule,FormsModule,MatMenuModule,MatButtonModule,CardComponent,PickerModule],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class ChatComponent {
   messageText = 'Enter something to say..';
@@ -30,24 +31,20 @@ export class ChatComponent {
   }
   message = '';
   pickerIsOpened =  false;
-  toggle = inject(ToggleService);
+  toggle : any = inject(ToggleService);
   @Output() sendMessage : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
   private readonly changeDedection = inject(ChangeDetectorRef);
   disableScrollDown = false
   @ViewChild('menu') pickerMenu!: MatMenu;
   send(){
-    this.sendMessage.emit({message : this.message});
-    this.message = '';
-  }
-
-  togglePicker(){
-    this.pickerIsOpened = !this.pickerIsOpened
-    return
+    if(!this.message) return;
+      this.sendMessage.emit({message : this.message});
+      this.message = '';
   }
 
   handleEmoji(event : any){
-    this.message += event.char;
+    this.message += event?.emoji?.native;
   }
 
 

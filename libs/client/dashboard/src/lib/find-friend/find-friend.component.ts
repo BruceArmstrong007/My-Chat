@@ -70,7 +70,7 @@ export class FindFriendComponent {
          .pipe(takeUntil(this.destroy$))
          .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.status);
+          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.success);
           this.snackBar.open(message,'Close',options);
 
          this.findList = this.findList.map((user:any)=>{

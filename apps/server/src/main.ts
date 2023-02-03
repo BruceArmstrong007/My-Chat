@@ -4,30 +4,12 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import http from 'http';
 import * as path from 'path';
-import {Server} from 'socket.io';
-import { expressRoutes, socket } from '@server/express';
-
-interface ServerToClientEvents {
-    noArg: () => void;
-    basicEmit: (a: number, b: string, c: Buffer) => void;
-    withAck: (d: string, callback: (e: number) => void) => void;
-  }
-  
-  interface ClientToServerEvents {
-    hello: () => void;
-  }
-  
-  interface InterServerEvents {
-    ping: () => void;
-  }
-  
-  interface SocketData {
-    name: string;
-    age: number;
-  }
+import { expressRoutes,ServerSocket } from '@server/express';
 
 const app = express();
 const httpServer = http.createServer(app);
+
+new ServerSocket(httpServer);   
 
 app.use(express.json())
 app.use(cookieParser());
@@ -52,24 +34,11 @@ app.get('/',async(req : Request,res : Response)=> res.status(200).json({success 
 
 const port = process.env.SERVER_PORT || 3333;
 
-const io = new Server<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
->(httpServer, {
-    cors: {
-      origin: process.env.WEB_CLIENT_URL,
-      methods: ["GET", "POST","PUT","DELETE","OPTIONS" ],
-      allowedHeaders: ["Origin", "X-Api-Key", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
-      credentials: true
-    },
-  });
 
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
 
- socket({ io });
+const server = httpServer.listen(port, () => {
+console.log(`Listening at http://localhost:${port}/api`);
+ 
 });
 
 server.on('error', console.error);

@@ -1,9 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import './../../../node_modules/@ctrl/ngx-emoji-mart/picker.css';
 /* You can add global styles to this file, and also import other style files */
-
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
@@ -22,27 +21,27 @@ body {
 }
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar:hover  {
-  width: 5px;
+  width: 3px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 3px grey;
-  border-radius: 3px;
+  box-shadow: inset 0 0 2px grey;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-track:hover {
-  box-shadow: inset 0 0 3px grey;
-  border-radius: 3px;
+  box-shadow: inset 0 0 2px grey;
+  border-radius: 2px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: rgb(69, 69, 69);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 /* Handle on hover */
@@ -67,3 +66,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
+
+.mat-mdc-menu-panel{
+  
+  &.menu{
+  overflow-x:auto;
+
+  }
+}

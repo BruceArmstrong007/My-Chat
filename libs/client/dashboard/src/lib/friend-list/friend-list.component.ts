@@ -53,7 +53,7 @@ ngAfterViewInit(){
          .pipe(takeUntil(this.destroy$))
          .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.status);
+          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.success);
           this.snackBar.open(message,'Close',options);
         },
         error: (err:any) => {
@@ -80,7 +80,7 @@ ngAfterViewInit(){
          .pipe(takeUntil(this.destroy$))
          .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.status);
+          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.success);
           this.snackBar.open(message,'Close',options);
         },
         error: (err:any) => {
