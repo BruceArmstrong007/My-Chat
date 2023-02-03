@@ -6,6 +6,10 @@ export class ServerSocket {
     public static instance: ServerSocket;
     public io: Server;
 
+    public get currentServer(){
+        return this.io;
+    }
+    
     constructor(server: HttpServer) {
         ServerSocket.instance = this;
         this.io = new Server(server, {
@@ -25,6 +29,11 @@ export class ServerSocket {
             socket.join(data?.id);
         });
         
+        socket.on('user', (data:any) => {
+            socket.join(data?.id);
+        });
+
+
         socket.on("message",async(data:any)=>{
             const save = await createMessage({from:data?.from,to:data?.to,message:data?.message});
             this.io.in(data?.id).emit("broadcast",save);

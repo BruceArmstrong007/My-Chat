@@ -18,7 +18,12 @@ export class UserService {
   private readonly url = injectConfig();
 
   readonly chat$ = this.chatMessage$.asObservable();
-  socket !: Socket;
+  public socket = io(this.url.WS_URL,{
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+    autoConnect: true,
+    withCredentials: true
+  });
 
 
   findUser(data:Pick<User, 'username'>) {
@@ -56,12 +61,6 @@ export class UserService {
   }
 
   connectWs(id : any){
-        this.socket = io(this.url.WS_URL,{
-          reconnectionAttempts: 5,
-          reconnectionDelay: 1000,
-          autoConnect: true,
-          withCredentials: true
-        });
         this.socket.emit('join',{id});
         this.socket.on("broadcast",(message:any)=>{
           this.chatMessage$.next(message);

@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import { updateUser } from '../service/user.service';
 
-export async function request(req: Request,res: Response){
+export async function request(req: Request | any,res: Response){
     try {
     const input = req?.body;
     //on friend request updating contact table
@@ -22,13 +22,20 @@ export async function request(req: Request,res: Response){
             },
         }
         });
+        
+    req.io.to(input.contact_id.toString()).emit("notification",{
+        id : input.contact_id.toString(),
+        type : "notification",
+        category: "received",
+        message : "Your have received a friend request."
+    })
     return res.status(200).json({success: true, message : 'Friend request sent successfully.'});
     } catch (e: any) {
     return res.status(409).json({success: false, message: e.message });
     }
 }
 
-export async function accept(req: Request,res: Response){
+export async function accept(req: Request | any,res: Response){
     try {
     const input = req?.body;
     //on friend request updating contact table
@@ -57,12 +64,12 @@ export async function accept(req: Request,res: Response){
             },
         }
         });
-
-    // notificationEvent.emit((input.contact_id).toString(),{
-    //     type : "notification",
-    //     category: "accepted",
-    //     message : "Your friend request has been accepted."
-    // });
+    req.io.to(input.contact_id.toString()).emit("notification",{
+            id : input.contact_id.toString(),
+            type : "notification",
+            category: "accepted",
+            message : "Your friend request has been accepted."
+        })
 
     return res.status(200).json({success: true, message : 'Friend accepted successfully.'});
     } catch (e: any) {
@@ -70,7 +77,7 @@ export async function accept(req: Request,res: Response){
     }
 }
 
-export async function unfriend(req: Request,res: Response){
+export async function unfriend(req: Request | any,res: Response){
     try {
     const input = req?.body;
     // delete contact table
@@ -95,6 +102,13 @@ export async function unfriend(req: Request,res: Response){
     //     category: "removed",
     //     message : "User removed."
     // });
+    
+        
+    req.io.to(input.contact_id.toString()).emit("notification",{
+            type : "notification",
+            category: "removed",
+            message : "User removed."
+        })
 
     return res.status(200).json({success: true, message : 'User unfriend successfully.'});
     } catch (e: any) {

@@ -9,10 +9,14 @@ import { expressRoutes,ServerSocket } from '@server/express';
 const app = express();
 const httpServer = http.createServer(app);
 
-new ServerSocket(httpServer);   
+const socketInstance = new ServerSocket(httpServer);   
 
 app.use(express.json())
 app.use(cookieParser());
+app.use((req:any,res:any,next)=>{
+  req.io = socketInstance.io;
+  next();
+})
 
 const ROUTES = {
     ASSETS: '/assets',

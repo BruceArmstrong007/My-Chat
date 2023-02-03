@@ -1,6 +1,9 @@
 import { Subject } from 'rxjs';
 import { AuthService } from './auth.service';
+import io, { Socket } from 'socket.io-client';
 import { inject, Injectable } from '@angular/core';
+import { injectConfig } from '../core.di';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,26 +11,21 @@ import { inject, Injectable } from '@angular/core';
 export class NotificationService {
   private readonly authService = inject(AuthService);
   private readonly notifications$ = new Subject();
+  private readonly url = injectConfig();
+  private socket : Socket = inject(UserService).socket;
 
   readonly notify$ = this.notifications$.asObservable();
 
 
   connectWs(id : any){
-    const setMessage = (data: any) =>{
-      this.notifications$.next(data);
-    }
-  //  const subscription = this.client.notification.userConnect.subscribe(id,{
-  //   onData(data) {
-  //     // ^ note that `data` here is inferred
-  //   setMessage(data);
-  //   },
-  //   onError(err) {
-  //     console.error('error', err);
-  //   },
-  //   onComplete() {
-  //     subscription.unsubscribe();
-  //   },
-  // });
+    this.socket.emit('user',{id:id.toString()});
+    this.socket.on("notification",(message:any)=>{
+      this.notifications$.next(message);
+    })
+    this.socket.on("error", (error:any) => {
+        console.log(error);
+    });
+
 }
 
   notification(data : any){
