@@ -11,20 +11,20 @@
       <p class="text-md text-white">{{card?.message}}</p>
    </div>
    <div *ngIf="section === 'Friends'" class="flex justify-evenly items-center">
-    <button (click)="unfriend.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'red'}"><mat-icon>close</mat-icon></button>
-    <button (click)="chatFriend.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'green'}"><mat-icon>chat_bubble_outline</mat-icon></button>
+    <button (click)="unfriend.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'red'}"><mat-icon>close</mat-icon></button>
+    <button (click)="chatFriend.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'green'}"><mat-icon>chat_bubble_outline</mat-icon></button>
  </div>
    <div *ngIf="section === 'Sent Requests'" class="flex justify-center items-center">
-    <button (click)="cancelRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'red'}"><mat-icon>cancel</mat-icon></button>
+    <button (click)="cancelRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'red'}"><mat-icon>cancel</mat-icon></button>
    </div>
    <div *ngIf="section === 'Received Requests'" class="flex justify-evenly items-center">
-    <button (click)="cancelRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'red'}"><mat-icon>cancel</mat-icon></button>
-    <button (click)="acceptRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'green'}"><mat-icon>check</mat-icon></button>
+    <button (click)="cancelRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'red'}"><mat-icon>cancel</mat-icon></button>
+    <button (click)="acceptRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'green'}"><mat-icon>check</mat-icon></button>
    </div>
    <div *ngIf="section === 'Find Friends'" class="flex justify-evenly items-center">
-    <button *ngIf="card?.requested;else addBlock" (click)="cancelRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'red'}"><mat-icon>cancel</mat-icon></button>
+    <button *ngIf="card?.requested;else addBlock" (click)="cancelRequest.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'red'}"><mat-icon>cancel</mat-icon></button>
     <ng-template #addBlock>
-      <button  (click)="addFriend.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'green'}"><mat-icon>add</mat-icon></button>
+      <button  (click)="addFriend.emit(card)" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'green'}"><mat-icon>add</mat-icon></button>
     </ng-template>
    </div>
 </div>
