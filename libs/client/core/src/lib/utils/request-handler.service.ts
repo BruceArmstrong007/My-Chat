@@ -19,8 +19,8 @@ responseStatus : any = {
 
 
 
-SuccessResponseHandler(message : string, success : boolean){
-  return {message : this.titleCase(message) , options : {...this.options,panelClass:[success ? this.responseStatus['notification-success'] : this.responseStatus['notification-error']]}};
+responseHandler(message : string, success : boolean){
+  return {message : this.titleCase(message) , options : {...this.options,panelClass:[success ? this.responseStatus?.SUCCESS : this.responseStatus?.ERROR]}};
  }
 
 titleCase(str:string) {

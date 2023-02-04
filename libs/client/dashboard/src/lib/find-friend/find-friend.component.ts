@@ -38,7 +38,7 @@ export class FindFriendComponent {
          .pipe(takeUntil(this.destroy$))
          .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.status);
+          const {message,options} = this.requestHandler.responseHandler(data?.message,data?.status);
           this.snackBar.open(message,'Close',options);
 
          this.findList = this.findList.map((user:any)=>{
@@ -70,7 +70,7 @@ export class FindFriendComponent {
          .pipe(takeUntil(this.destroy$))
          .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.SuccessResponseHandler(data?.message,data?.success);
+          const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
           this.snackBar.open(message,'Close',options);
 
          this.findList = this.findList.map((user:any)=>{
