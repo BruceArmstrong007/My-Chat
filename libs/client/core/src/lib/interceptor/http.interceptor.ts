@@ -31,7 +31,7 @@ export class RequestInterceptor implements HttpInterceptor {
         return event;
       }),
       catchError(({error}: HttpErrorResponse) => {
-        if((error.message == 'Session expired.' || error.message == 'Unauthorized.') && error.success === false){
+        if((error.message == 'Session expired.') && error.success === false){
           this.authService.logout();
         }
         const {message,options} = this.requestHandler.responseHandler( error.message, error.success);
