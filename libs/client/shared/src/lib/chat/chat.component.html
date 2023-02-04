@@ -1,6 +1,6 @@
 <div class="w-full h-full flex flex-col">
-  <div class="h-5/6 w-full p-2 overflow-auto" #scrollMe>
-    <div *ngFor="let chat of _messageList; let last = last" class="w-full">
+  <div class="h-5/6 w-full p-2 overflow-auto scroll-smooth" #scrollMe>
+    <div *ngFor="let chat of _messageList | async; let last = last" class="w-full">
       <ng-container *ngIf="chat.from === this.currentUser?.id;else contactMsg">
         <div class="p-2 flex justify-end">
           <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : currentUser?.username, image : currentUser?.image}"></my-chat-app-card>

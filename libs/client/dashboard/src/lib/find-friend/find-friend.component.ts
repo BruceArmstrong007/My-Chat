@@ -1,9 +1,9 @@
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, PromptHandlerService, UserService, RequestHandlerService } from '@client/core';
-import { Subject, distinctUntilChanged, takeUntil,  map } from 'rxjs';
+import { Subject, distinctUntilChanged, takeUntil,  map, BehaviorSubject } from 'rxjs';
 import { ListComponent } from '@client/shared';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,10 +16,9 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FindFriendComponent {
-  findList: any[] = [];
+  findList$ : any = new BehaviorSubject([]);
   addRequest$ : any = new Subject();
   findFriend$ : any = new Subject();
-  changeDetection = inject(ChangeDetectorRef);
   cancelRequest$ : any = new Subject();
   private readonly requestHandler = inject(RequestHandlerService);
   private readonly destroy$ = new Subject<void>();
@@ -33,28 +32,22 @@ export class FindFriendComponent {
     this.addRequest$.subscribe((event:any)=>{
       this.prompt.openDialog({title : 'Confirmation',description:'Do you want send request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
-        if(result && contact_id){
+        if(!result || !contact_id){
+          return;
+        }
          this.userService.requestUser({contact_id : event.id,user_id : contact_id})
          .pipe(takeUntil(this.destroy$))
-         .subscribe({
-        next: (data:any) => {
-
-         this.findList = this.findList.map((user:any)=>{
-            if(user.id === event.id){
-              return {
-                ...user,
-                requested : true
+         .subscribe((data:any) => {
+            this.findList$.next(this.findList$.value.map((user:any)=>{ 
+              if(user.id === event.id){
+                return {
+                  ...user,
+                  requested : true
+                }
               }
-            }
-            return user;
+              return user;
+            }))
           });
-          this.changeDetection.detectChanges();
-        },
-        error: (err:any) => {
-          console.log(err);
-        },
-      });
-        }
       });
 
     });
@@ -63,37 +56,31 @@ export class FindFriendComponent {
     this.cancelRequest$.subscribe((event:any)=>{
       this.prompt.openDialog({title : 'Confirmation',description:'Do you want to cancel request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
-        if(result && contact_id){
-         this.userService.unfriendUser({contact_id : event.id,user_id : contact_id})
-         .pipe(takeUntil(this.destroy$))
-         .subscribe({
-        next: (data:any) => {
-          const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
-          this.snackBar.open(message,'Close',options);
-
-         this.findList = this.findList.map((user:any)=>{
-          if(user.id === event.id){
-            return {
-              ...user,
-              requested : false
-            }
-          }
-          return user;
-        });
-        this.changeDetection.detectChanges();
-        },
-        error: (err:any) => {
-          console.log(err);
-        },
-      });
+        if(!result || !contact_id){
+          return;
         }
+         this.userService.unfriendUser({contact_id : event.id,user_id : contact_id}).pipe(takeUntil(this.destroy$))
+         .subscribe((data:any) => {
+            const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
+            this.snackBar.open(message,'Close',options);
+
+            this.findList$.next(this.findList$.value.map((user:any)=>{
+              if(user.id === event.id){
+                return {
+                  ...user,
+                  requested : false
+                }
+              }
+              return user;
+            }));
+          });
       });
 
     });
 
     this.findFriend$.pipe(distinctUntilChanged()).subscribe((event:any)=>{
       if(!event){
-        this.findList = [];
+        this.findList$.next([]);
         return;
       }
       this.userService.findUser({username : event}).pipe(takeUntil(this.destroy$),
@@ -107,7 +94,6 @@ export class FindFriendComponent {
         //
         userList = userList.map((user:any)=>{
           if(currentUser.contact.find((elt : any)=> elt.id === user.id)){
-
             return {
               ...user,
               requested : true
@@ -119,7 +105,7 @@ export class FindFriendComponent {
       }))
       .subscribe({
         next: (data:any) => {
-            this.findList = data;
+            this.findList$.next(data);
         },
         error: (err:any) => {
           console.log(err);

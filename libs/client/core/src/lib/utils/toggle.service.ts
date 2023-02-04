@@ -8,12 +8,13 @@ export class ToggleService {
   
   constructor() {
     this.darkmode = this.getMode();
-    console.log(this.darkmode);
+    this.setMode(this.darkmode);
     
   }
 
     toggle(){
       this.darkmode = !this.darkmode;
+      this.setMode(this.darkmode);
     }
 
     getMode(){

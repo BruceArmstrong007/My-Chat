@@ -1,29 +1,30 @@
 import { inject, Injectable } from '@angular/core';
 import { Contacts, User } from '@prisma/client';
-import { map, switchMap, iif, Subject } from 'rxjs';
+import { map, switchMap, iif, BehaviorSubject, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { injectConfig } from '../core.di';
 import { HttpService } from '../utils/http.service';
-import io, { Socket } from 'socket.io-client';
-
-
+import io from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private readonly authService = inject(AuthService);
-  private readonly chatMessage$ = new Subject();
+  readonly chatMessages$ : any = new BehaviorSubject([]);
   private readonly http = inject(HttpService);
   private readonly url = injectConfig();
 
-  readonly chat$ = this.chatMessage$.asObservable();
-  public socket = io(this.url.WS_URL,{
+  socket = io(this.url.WS_URL,{
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     autoConnect: true,
     withCredentials: true
   });
+
+   emptyChat(){
+    this.chatMessages$.next([]);
+  }
 
 
   findUser(data:Pick<User, 'username'>) {
@@ -60,23 +61,31 @@ export class UserService {
     )
   }
 
-  connectWs(id : any){
-        this.socket.emit('join',{id});
-        this.socket.on("broadcast",(message:any)=>{
-          this.chatMessage$.next(message);
+  connectWs(id : string){
+        this.socket.connect();
+        this.socket.emit('joinChat',{id});
+        this.socket.on(id,(message:any)=>{
+          console.log(message);
+          this.chatMessages$.next([...this.chatMessages$.value,message]);
         })
         this.socket.on("error", (error:any) => {
             console.log(error);
         });
-    
+  }
+
+  disconnectWs(id:string){
+    if(id)
+      this.socket.emit('leaveChat',{id});
+    this.socket.disconnect();  
   }
 
   chat(data:any){
     this.socket.emit("message",data);
+    this.chatMessages$.next([...this.chatMessages$.value,{...data, created_at : new Date()}])
   }
 
   getChats(data:any){
-    return this.http.post('/message',data).pipe(map((res:any)=> res?.data?.messages));
+   this.http.post('/message',data).pipe(tap((res:any)=> this.chatMessages$.next(res?.data?.messages))).subscribe((res:any)=>{return;});
   }
 
 

@@ -2,7 +2,7 @@ import { IS_LOGGED_STORAGE_KEY } from '../config/auth.config';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '@prisma/client';
-import { BehaviorSubject, iif, map, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, iif, map, of, switchMap, tap, filter } from 'rxjs';
 import { injectToken } from '../core.di';
 import { HttpService } from '../utils/http.service';
 
@@ -20,6 +20,12 @@ export class AuthService {
 
   currentUser(){
     return  this.currentUser$.getValue();
+  }
+
+  friends(){
+    return this.currentUser$.pipe(
+    map((user:any)=> user?.contact.filter((contact:any) => contact?.status === "friend")),
+    )
   }
 
   authenticateUser(user: UserData) {

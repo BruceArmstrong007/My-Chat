@@ -1,9 +1,9 @@
 import { UserService, AuthService } from '@client/core';
 import { Location } from '@angular/common';
-import { Subject,  takeUntil } from 'rxjs';
+import {  Observable, Subject, takeUntil } from 'rxjs';
 import { ChatComponent } from '@client/shared';
 import { ListComponent } from '@client/shared';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,15 +18,12 @@ export class MyChatComponent {
   sendMessage$: any = new Subject();
   cardClick$: any = new Subject();
   contactUser:any;
-  messageList : any[] = [];
+  messageList$: any = new Subject();
   private readonly destroy$ = new Subject<void>();
-  private readonly userService = inject(UserService);
-   readonly authService = inject(AuthService);
-   private readonly location = inject(Location);
-  private readonly changeDetection = inject(ChangeDetectorRef);
-
-
-  friendList: any[] = [];
+  readonly userService = inject(UserService);
+  readonly authService = inject(AuthService);
+  private readonly location = inject(Location);
+  friendList$!:Observable<any[]>;
 
 
 ngAfterViewInit(){
@@ -36,17 +33,9 @@ ngAfterViewInit(){
   }else{
     this.contactUser = undefined;
   }
-  this.userService.chat$.pipe(takeUntil(this.destroy$)).subscribe((message:any)=>{
-        this.messageList = [...this.messageList, message];
-        this.changeDetection.detectChanges();
-  });
+  
 
-  this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe((user:any)=>{
-     this.friendList = this.contactFilter(user?.contact,'friend');
-    this.changeDetection.detectChanges();
-  });
-
-
+  this.friendList$ = this.authService.friends();
   this.cardClick$
     .subscribe(this.startChat.bind(this));
 
@@ -67,26 +56,17 @@ ngAfterViewInit(){
   }
 
   startChat(contactUser:any)  {
-    this.contactUser = contactUser;
-    this.messageList = [];
     const user_id = this.authService.currentUser()?.id;
-
+    if(this.contactUser)
+      this.userService.disconnectWs(this.userService.generateRoomID(user_id,this.contactUser?.id))
+    this.contactUser = contactUser;
+    this.userService.emptyChat();
     const contact_id = this.contactUser?.id;
     // generate room id to create room
-    this.userService.getChats({user_id,contact_id}).subscribe((res:any)=>{
-      this.messageList = res;      
-      this.changeDetection.detectChanges();
-    });
+    this.userService.getChats({user_id,contact_id});
     this.userService.connectWs(this.userService.generateRoomID(user_id,contact_id));
   }
 
-  contactFilter(contact:any,key : string){
-    if(!contact || contact.length == 0){
-      return [];
-    }
-     contact = contact.filter((contact:any)=>contact.status === key);
-     return contact;
-  }
 
 
   ngOnDestroy(){

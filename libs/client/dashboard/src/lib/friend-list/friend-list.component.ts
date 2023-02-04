@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject, takeUntil,} from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil,} from 'rxjs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ListComponent } from '@client/shared';
 import { ChangeDetectionStrategy, Component, inject, ChangeDetectorRef } from '@angular/core';
@@ -22,9 +22,9 @@ export class FriendListComponent {
   cancelRequest$ = new Subject();
   acceptRequest$ = new Subject();
 
-  friendList: any[] = [];
-  sentList: any[] = [];
-  receivedList: any[] = [];
+  friendList$: any = new BehaviorSubject([]);
+  sentList$: any = new BehaviorSubject([]);
+  receivedList$: any = new BehaviorSubject([]);
   private readonly requestHandler = inject(RequestHandlerService);
   private readonly destroy$ = new Subject<void>();
   private readonly userService = inject(UserService);
@@ -38,10 +38,9 @@ export class FriendListComponent {
 
 ngAfterViewInit(){
     this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe(((user:any)=>{
-      this.sentList = this.contactFilter(user?.contact,'sent');
-      this.friendList = this.contactFilter(user?.contact,'friend');
-      this.receivedList = this.contactFilter(user?.contact,'received');
-      this.changeDetection.detectChanges();
+      this.sentList$.next(this.contactFilter(user?.contact,'sent'));
+      this.friendList$.next(this.contactFilter(user?.contact,'friend'));
+      this.receivedList$.next(this.contactFilter(user?.contact,'received'));
     }));
 
 
@@ -51,12 +50,8 @@ ngAfterViewInit(){
         if(result && contact_id){
          this.userService.acceptUser({contact_id : event.id,user_id : contact_id})
          .pipe(takeUntil(this.destroy$))
-         .subscribe({
-        next: (data:any) => {
-        },
-        error: (err:any) => {
-          console.log(err);
-        },
+         .subscribe((data:any) => {
+        return;
         });
         }
       });
@@ -76,13 +71,9 @@ ngAfterViewInit(){
         if(result && contact_id){
          this.userService.unfriendUser({contact_id : event.id,user_id : contact_id})
          .pipe(takeUntil(this.destroy$))
-         .subscribe({
-        next: (data:any) => {
-        },
-        error: (err:any) => {
-          console.log(err);
-        },
-      });
+         .subscribe((data:any) => {
+          return;
+        });
         }
       });
     });

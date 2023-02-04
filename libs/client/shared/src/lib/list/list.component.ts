@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, tap, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, Subject, Observable, filter } from 'rxjs';
 
 @Component({
   selector: 'my-chat-app-list',
@@ -19,12 +19,16 @@ import { debounceTime, distinctUntilChanged, tap, Subject } from 'rxjs';
 export class ListComponent {
   search!:string;
   textInput$ : any = new Subject();
-  _list : any[]  = [];
+  _list$ !: Observable<any[]>;
+  tempList$ !: Observable<any[]>;
   @Input() searchText = "Enter your friend's name.";
   @Input() section!: string;
-  @Input() set list(value: any[]) {
-    this._list = value;
-    this.populateList();
+  @Input() set list(value: any) {
+    if(!value) return;
+    value.subscribe((res:any)=>{
+      this._list$ = value;
+      this.populateList();
+    });
   }
   @Output() cardClick : any = new EventEmitter();
   @Output() findFriend : any = new EventEmitter();
@@ -36,10 +40,8 @@ export class ListComponent {
 
 
 
-  tempList :any[] = [];
 
   ngAfterViewInit(){
-    this.populateList();
     this.textInput$.pipe(distinctUntilChanged()).subscribe((event:any)=>{
       this.findFriend.emit(this.search);
     });
@@ -51,7 +53,7 @@ export class ListComponent {
       return;
     }
     if(this.search){
-      this.tempList = this.tempList.filter((data:any)=> data.name.startsWith(this.search) || data.name.includes(this.search))
+      this.tempList$ = this._list$.pipe(filter((data:any)=> data.name.startsWith(this.search) || data.name.includes(this.search)))
     }
     else{
       this.populateList();
@@ -60,7 +62,7 @@ export class ListComponent {
 
 
   populateList(){
-    this.tempList = this._list;
+    this.tempList$ = this._list$;
   }
 
 

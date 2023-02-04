@@ -23,14 +23,14 @@ export class ChatComponent {
   messageText = 'Enter something to say..';
   @Input() currentUser : any;
   @Input() contactUser : any;
-  _messageList : any;
+  _messageList !: Observable<any[]>;
   @Input() set messageList(value:any){
-    if(!value || value.length === 0) return;
-    this._messageList = value;
-    setTimeout(()=>{this.scrollToBottom()},0);
+      this._messageList = value;
+      this._messageList.subscribe((res:any)=>{
+        setTimeout(()=>{this.scrollToBottom()},1);
+      })
   }
   message = '';
-  pickerIsOpened =  false;
   toggle : any = inject(ToggleService);
   @Output() sendMessage : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
