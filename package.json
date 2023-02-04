@@ -6,6 +6,7 @@
     "db:init": "npx prisma init",
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate dev --name init",
+    "start": "npx nx serve server",
     "db:show": "npx prisma studio"
   },
   "private": true,
