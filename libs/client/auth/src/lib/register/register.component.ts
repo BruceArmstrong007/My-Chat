@@ -51,8 +51,6 @@ export class RegisterComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
-          this.snackBar.open(message,'Close',options);
           this.router.navigateByUrl('/login');
         },
         error: (err:any) => {

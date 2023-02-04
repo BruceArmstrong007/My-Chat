@@ -38,8 +38,6 @@ export class FindFriendComponent {
          .pipe(takeUntil(this.destroy$))
          .subscribe({
         next: (data:any) => {
-          const {message,options} = this.requestHandler.responseHandler(data?.message,data?.status);
-          this.snackBar.open(message,'Close',options);
 
          this.findList = this.findList.map((user:any)=>{
             if(user.id === event.id){

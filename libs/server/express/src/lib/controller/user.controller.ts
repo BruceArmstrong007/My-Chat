@@ -32,7 +32,7 @@ export async function user(req: Request,res: Response){
         }
 
 
-        return res.status(200).json({success: true,message: "User fetched successfully.",data: {...user,contact:contacts}})      
+        return res.status(200).json({success: true,data: {...user,contact:contacts}})      
     } catch (e: any) {
     return res.status(409).json({success: false, message: e.message });
     }
