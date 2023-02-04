@@ -53,7 +53,7 @@ export class RegisterComponent {
         next: (data:any) => {
           const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
           this.snackBar.open(message,'Close',options);
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/login');
         },
         error: (err:any) => {
           console.log(err);
