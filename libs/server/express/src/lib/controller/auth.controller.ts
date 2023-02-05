@@ -33,7 +33,7 @@ export async function login(req: Request,res: Response){
         const refreshToken = await signJwt({ id: user.id }, process.env.REFRESHTOKENSECRET, { expiresIn: 60 * 60 * 24 });
         
         console.info( process.env.WEB_CLIENT_URL + "/");
-        await res.cookie('refreshToken', refreshToken, {sameSite: true,httpOnly:true, secure: true ,maxAge : 10000000});
+        await res.cookie('refreshToken', refreshToken, {sameSite: 'none',httpOnly:true, secure: true ,maxAge : 10000000});
 
         //Saving refresh token in DB
         await updateUser(user.id,{refreshToken});
@@ -121,7 +121,7 @@ export async function accessToken(req: Request,res: Response){
     await updateUser(user.id,{refreshToken : newRefreshToken});
         
     //Send new refresh token as cookie in response
-    await res.cookie('refreshToken', newRefreshToken, {sameSite: true,httpOnly:true, secure: true, maxAge : 10000000});
+    await res.cookie('refreshToken', newRefreshToken, {sameSite: 'none',httpOnly:true, secure: true, maxAge : 10000000});
 
     return res.status(200).json({ success: true, data : {token} });
     } catch (e: any) {
