@@ -36,7 +36,7 @@ app.use(ROUTES.API, expressRoutes);
 
 app.get('/',async(req : Request,res : Response)=> res.status(200).json({success : true, message:'Server is up and running!'}));
 
-const port = process.env.SERVER_PORT || 3333;
+const port = process.env.PORT || 3333;
 
 
 
