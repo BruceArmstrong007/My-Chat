@@ -10,20 +10,14 @@
  
 # Commands to run the sever and client locally
 1.) npm i -f
-2.) npx nx serve client - starts angular client @ port 4200
-3.) npx nx serve server - starts trpc http server @ port 3333 and trpc ws server @ port 3001
-4.) npm run db:show - to host visual representation of sqlite DB @ port 5000
-
-
-# Commands to initialize and generate db prisma
-1.) npm run db:init
 2.) npm run db:generate
 3.) npm run db:migrate
+4.) npx nx serve client - starts angular client @ port 4200
+5.) npx nx serve server - starts trpc http server @ port 3333 and trpc ws server @ port 3001
+6.) npm run db:show - to host visual representation of sqlite DB @ port 5000
 
-# Note
-  dev.db is in this repo 
-  usernames that exist - bruce123 , bruce321
-  password - 12345678
+
+
 
 # Images
 <img width="960" alt="resetpassword" src="https://user-images.githubusercontent.com/48177059/213621138-4e94d9c2-0c0b-40bc-825e-f89d8b82a09f.png">
