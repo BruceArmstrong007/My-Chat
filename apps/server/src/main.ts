@@ -12,10 +12,14 @@ const httpServer = http.createServer(app);
 
 
 
-const socketInstance = new ServerSocket(httpServer);
+
 app.use(helmet());
+
 app.use(express.json())
+
 app.use(cookieParser());
+
+const socketInstance = new ServerSocket(httpServer);
 app.use((req: any,res:Response,next:NextFunction)=>{
   req.io = socketInstance.io;
   next();
@@ -30,6 +34,7 @@ const ROUTES = {
     origin: CLIENT_URL,
     credentials : true,
    }));
+
   app.use(requestLogger);
 
 app.use(ROUTES.ASSETS, express.static(path.join(__dirname, 'assets')));
