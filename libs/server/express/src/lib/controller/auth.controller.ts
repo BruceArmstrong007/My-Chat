@@ -90,7 +90,7 @@ export async function accessToken(req: Request,res: Response){
     const refreshToken = req?.cookies?.refreshToken;
 
     if(!refreshToken){
-        return res.status(400).json({success: false, message: 'Session expired.' });
+        return res.status(401).json({success: false, message: 'Session expired.' });
     }
 
     //Verify refresh token and get ID
@@ -104,7 +104,7 @@ export async function accessToken(req: Request,res: Response){
 
     //Unauthorized
     if (!user || user.refreshToken !== refreshToken) {
-        return res.status(400).json({success: false, message : "Unauthorized."});
+        return res.status(401).json({success: false, message : "Unauthorized."});
     }
 
     const payload: TokenPayload = { id: user.id, username: user.username };

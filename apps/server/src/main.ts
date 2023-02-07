@@ -5,10 +5,13 @@ import express from 'express';
 import helmet from 'helmet';
 import http from 'http';
 import * as path from 'path';
-import { CLIENT_URL, expressRoutes,ServerSocket } from '@server/express';
+import { CLIENT_URL, expressRoutes,requestLogger,ServerSocket } from '@server/express';
 
 const app = express();
 const httpServer = http.createServer(app);
+
+
+app.use(requestLogger);
 
 const socketInstance = new ServerSocket(httpServer);
 app.use(helmet());
@@ -31,7 +34,6 @@ const ROUTES = {
 
 app.use(ROUTES.ASSETS, express.static(path.join(__dirname, 'assets')));
 app.use(ROUTES.API, expressRoutes);
-
 
 
 

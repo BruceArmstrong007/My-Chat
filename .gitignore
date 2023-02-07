@@ -41,6 +41,9 @@ Thumbs.db
 .angular
 
 
-# prisma 
+# prisma
 prisma/migrations/
 prisma/dev.db
+
+# logger
+logs

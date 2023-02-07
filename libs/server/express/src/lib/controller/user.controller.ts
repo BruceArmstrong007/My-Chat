@@ -6,10 +6,10 @@ import * as bcrypt from 'bcrypt';
 export async function user(req: Request,res: Response){
     try {
         const userPayload = res.locals.userPayload;
-        
+
         //Update refresh token in DB
         const user = await findUser(userPayload.id,selectWithoutCredential)
-   
+
         //User not found
         if(!user){
             return res.status(400).json({ success : false, message : "Unauthenticated."});
@@ -27,12 +27,12 @@ export async function user(req: Request,res: Response){
                 ...cont,
                 status : contact[i]?.status
                 })
-    
+
             }
         }
 
 
-        return res.status(200).json({success: true,data: {...user,contact:contacts}})      
+        return res.status(200).json({success: true,data: {...user,contact:contacts}})
     } catch (e: any) {
     return res.status(409).json({success: false, message: e.message });
     }
@@ -45,7 +45,7 @@ export async function update(req: Request,res: Response){
     const user = await findUser(input?.username,selectWithoutCredential)
 
     if(!user){
-       return res.status(400).json({message : "User not found.", success : false})
+       return res.status(404).json({message : "User not found.", success : false})
     }
 
 
@@ -86,7 +86,7 @@ export async function find(req: Request,res: Response){
 export async function resetPassword(req: Request,res: Response){
     try {
     const input = req?.body;
-    
+
     //Hash the password
     const hashedPassword = await bcrypt.hash(input?.password, Number(process.env.SALT_ROUNDS));
 

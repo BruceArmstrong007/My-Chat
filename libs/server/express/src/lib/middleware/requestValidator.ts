@@ -3,7 +3,7 @@ import { AnyZodObject, ZodEffects } from 'zod';
 
 const validate = (schema: AnyZodObject | ZodEffects<any>) => (req : Request, res : Response, next : NextFunction) => {
     try{
-        schema.parse({    
+        schema.parse({
             body: req.body,
             query: req.query,
             params: req.params

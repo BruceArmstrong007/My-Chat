@@ -46,7 +46,7 @@ export class AuthService {
     this.http.get('/auth/logout').subscribe((res:any)=>{
       this.router.navigateByUrl('/');
       this.currentUser$.next(null);
-      this.clearStorage();
+      this.defaultState();
     });
   }
 
@@ -81,7 +81,9 @@ export class AuthService {
     );
   }
 
-  clearStorage() {
+  defaultState() {
+    this.router.navigateByUrl('/');
+    this.currentUser$.next(null);
     localStorage.clear();
   }
 

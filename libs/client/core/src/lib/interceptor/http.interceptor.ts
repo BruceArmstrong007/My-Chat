@@ -30,12 +30,12 @@ export class RequestInterceptor implements HttpInterceptor {
         }
         return event;
       }),
-      catchError(({error}: HttpErrorResponse) => {
-        if((error.message == 'Session expired.') && error.success === false){
-          this.authService.logout();
-        }
+      catchError(({error,status}: HttpErrorResponse) => {
         const {message,options} = this.requestHandler.responseHandler( error.message, error.success);
         this.snackBar.open(message,'Close',options);
+        if(status === 401){
+          this.authService.defaultState();
+        }
         return of(new HttpResponse({}));
       })
     );
