@@ -22,6 +22,9 @@ const messageRoutes : Router = express.Router();
 expressRoutes.use('/message',messageRoutes);
 messageRoutes.use(verifyToken);
 
+
+export const CLIENT_URL = process.env.NODE_ENV == 'production' ? process.env.WEB_CLIENT_URL : process.env.LOCAL_CLIENT_URL;
+
 // Health Check
 expressRoutes.get('/',(req : Request,res : Response)=> res.json({success : true, message : 'API is working!'}));
 
@@ -37,12 +40,12 @@ userRoutes.post('/update',validate(updateUserSchema),update);
 userRoutes.post('/find',validate(findUserSchema),find);
 userRoutes.post('/resetPassword',validate(resetPasswordSchema),resetPassword);
 
-// Contact Routes   
+// Contact Routes
 contactRoutes.post('/request',validate(contactSchema),request);
 contactRoutes.post('/accept',validate(contactSchema),accept);
 contactRoutes.post('/unfriend',validate(contactSchema),unfriend);
 
-// Message Routes   
+// Message Routes
 messageRoutes.post('/',validate(contactSchema),load);
 
 

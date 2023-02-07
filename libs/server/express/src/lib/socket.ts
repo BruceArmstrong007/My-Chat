@@ -1,5 +1,6 @@
 import { Server as HttpServer } from 'http';
 import { Socket, Server } from 'socket.io';
+import { CLIENT_URL } from './express';
 import {createMessage} from './service/message.service';
 
 export class ServerSocket {
@@ -10,22 +11,22 @@ export class ServerSocket {
     public get currentServer(){
         return this.io;
     }
-    
+
     constructor(server: HttpServer) {
         ServerSocket.instance = this;
         this.io = new Server(server, {
             cors: {
-                origin: [process.env.WEB_CLIENT_URL],
+                origin: [CLIENT_URL],
                 credentials: true
             },
         });
-        
+
         this.io.on('connection',this.StartListeners);
     }
 
     StartListeners = (socket: Socket) => {
         console.log('StartListeners');
-        
+
         socket.on('joinChat',async (data:any) => {
             await socket.join(data?.id);
             console.log(socket?.id+' joined ' + data?.id);
@@ -50,7 +51,7 @@ export class ServerSocket {
             console.info(res);
         });
 
-        
+
         socket.on('disconnect', () => {
             console.log(`Client disconnected: ${socket.id}`);
         });
