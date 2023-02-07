@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -17,7 +17,7 @@ app.use(helmet());
 app.use(express.json())
 app.use(cookieParser());
 app.use(requestLogger);
-app.use((req:any,res:any,next)=>{
+app.use((req: any,res:Response,next:NextFunction)=>{
   req.io = socketInstance.io;
   next();
 })
