@@ -10,13 +10,13 @@ import { CLIENT_URL, expressRoutes,requestLogger,ServerSocket } from '@server/ex
 const app = express();
 const httpServer = http.createServer(app);
 
-app.use(requestLogger);
 
 
 const socketInstance = new ServerSocket(httpServer);
 app.use(helmet());
 app.use(express.json())
 app.use(cookieParser());
+app.use(requestLogger);
 app.use((req:any,res:any,next)=>{
   req.io = socketInstance.io;
   next();
