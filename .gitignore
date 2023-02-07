@@ -46,4 +46,4 @@ prisma/migrations/
 prisma/dev.db
 
 # logger
-logs
+logs/*.log
