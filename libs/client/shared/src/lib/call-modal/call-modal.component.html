@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-card-header class="bg-green-600 text-white">
+    <button [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" mat-mini-fab>
+      <img class="rounded-xl" alt="" [src]="(data$ | async)?.contactUser?.image ? (data$ | async)?.contactUser?.image : './assets/images/default.png'">
+    </button>
+     <div class="flex justify-center items-center"><span class="text-md">{{(data$ | async)?.contactUser?.username}}</span></div>
+    </mat-card-header>
+  <mat-card-content class="bg-green-600 text-white flex justify-center items-center">
+    <div *ngIf="(data$ | async)?.status !== 'accepted';else VideoElt" class="py-2 h-10 flex justify-center items-center">
+      <div class="text-md">{{(data$ | async)?.status}}</div>
+    </div>
+    <ng-template #VideoElt>
+      <div id="video-wrapper">
+        <video #remoteVideo id="remote-video" poster="./assets/images/default.png" autoplay playsinline></video>
+        <video #localVideo id="local-video" poster="./assets/images/default.png" autoplay playsinline></video>
+      </div>
+    </ng-template>
+</mat-card-content>
+  <mat-card-footer class="bg-green-600 text-white">
+    <div class="py-2 flex justify-evenly items-center">
+      <button *ngIf="!(data$ | async)?.isCaller && (data$ | async)?.status !== 'accepted'" [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'green'}" (click)="accept()" mat-mini-fab><mat-icon>call</mat-icon></button>
+      <button [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'red'}" (click)="reject()" mat-mini-fab><mat-icon>call_end</mat-icon></button>
+    </div>
+   </mat-card-footer>
+</mat-card>

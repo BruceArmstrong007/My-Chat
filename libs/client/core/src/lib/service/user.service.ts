@@ -22,6 +22,8 @@ export class UserService {
     withCredentials: true
   });
 
+
+
    emptyChat(){
     this.chatMessages$.next([]);
   }
@@ -65,7 +67,6 @@ export class UserService {
         this.socket.connect();
         this.socket.emit('joinChat',{id});
         this.socket.on(id,(message:any)=>{
-          console.log(message);
           this.chatMessages$.next([...this.chatMessages$.value,message]);
         })
         this.socket.on("error", (error:any) => {
@@ -76,7 +77,7 @@ export class UserService {
   disconnectWs(id:string){
     if(id)
       this.socket.emit('leaveChat',{id});
-    this.socket.disconnect();  
+    this.socket.disconnect();
   }
 
   chat(data:any){

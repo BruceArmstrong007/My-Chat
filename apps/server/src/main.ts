@@ -35,7 +35,7 @@ const ROUTES = {
     credentials : true,
    }));
 
-  app.use(requestLogger);
+  // app.use(requestLogger);
 
 app.use(ROUTES.ASSETS, express.static(path.join(__dirname, 'assets')));
 app.use(ROUTES.API, expressRoutes);

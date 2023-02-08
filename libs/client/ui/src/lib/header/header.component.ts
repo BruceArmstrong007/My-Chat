@@ -1,4 +1,4 @@
-import { takeUntil, Subject } from 'rxjs';
+import { takeUntil, Subject, distinctUntilChanged } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import {  NotificationService, ToggleService } from '@client/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,7 +37,7 @@ export class HeaderComponent {
       this.user = user;
     });
 
-    this.notificationService.notify$.pipe(takeUntil(this.destroy$)).subscribe((notification:any)=>{
+    this.notificationService.notify$.pipe(distinctUntilChanged(),takeUntil(this.destroy$)).subscribe((notification:any)=>{
       this.notificationService.notification(notification);
       if(notification?.category === 'accepted' || notification?.category === 'received'){
         this.notifications = [...this.notifications,notification];

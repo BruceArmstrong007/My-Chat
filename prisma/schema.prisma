@@ -35,7 +35,7 @@ model Messages {
   from         Int
   to           Int
   message      String
+  type         String
   created_at   DateTime  @default(now())
   updated_at   DateTime  @default(now())
 }
-

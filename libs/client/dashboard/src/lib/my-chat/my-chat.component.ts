@@ -33,7 +33,7 @@ ngAfterViewInit(){
   }else{
     this.contactUser = undefined;
   }
-  
+
 
   this.friendList$ = this.authService.friends();
   this.cardClick$
@@ -48,7 +48,8 @@ ngAfterViewInit(){
       ...event,
       id,
       from : user_id,
-      to : contact_id
+      to : contact_id,
+      type : "chat"
     };
 
     this.userService.chat(data);

@@ -1,5 +1,5 @@
 import { CardComponent } from './../card/card.component';
-import { Observable, Subject,filter } from 'rxjs';
+import { Observable, Subject,filter, takeUntil, distinctUntilChanged } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ViewEncapsulation, ChangeDetectionStrategy, Component, inject, ViewChild, EventEmitter, Output, Input, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToggleService } from '@client/core';
+import { ToggleService, NotificationService } from '@client/core';
 import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 @Component({
@@ -17,7 +17,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+encapsulation: ViewEncapsulation.None
 })
 export class ChatComponent {
   messageText = 'Enter something to say..';
@@ -32,6 +32,8 @@ export class ChatComponent {
   }
   message = '';
   toggle : any = inject(ToggleService);
+  private readonly destroy$ = new Subject<void>();
+  private readonly notificationService = inject(NotificationService);
   @Output() sendMessage : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
   private readonly changeDedection = inject(ChangeDetectorRef);
@@ -47,6 +49,14 @@ export class ChatComponent {
     this.message += event?.emoji?.native;
   }
 
+  callUser(){
+    this.notificationService.call({
+      from : this.currentUser?.id.toString(),
+      to : this.contactUser?.id.toString(),
+      peerID : this.notificationService.peer?.id,
+      status : "calling"
+    },"callRequest");
+  }
 
   ngAfterViewInit() {
     // Inject our custom logic of menu close
@@ -95,6 +105,12 @@ keyEvent(event: KeyboardEvent) {
     if (event.keyCode === 13) {
        if(this.message) this.send();
     }
+}
+
+
+ngOnDestroy(){
+  this.destroy$.next();
+  this.destroy$.complete();
 }
 }
 

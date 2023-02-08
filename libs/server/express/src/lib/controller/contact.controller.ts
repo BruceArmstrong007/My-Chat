@@ -22,7 +22,7 @@ export async function request(req: Request | any,res: Response){
             },
         }
         });
-        
+
     req.io.to(input.contact_id.toString()).emit("notification",{
         id : input.contact_id.toString(),
         type : "notification",
@@ -97,13 +97,6 @@ export async function unfriend(req: Request | any,res: Response){
         }
         });
 
-    // notificationEvent.emit((input.contact_id).toString(),{
-    //     type : "notification",
-    //     category: "removed",
-    //     message : "User removed."
-    // });
-    
-        
     req.io.to(input.contact_id.toString()).emit("notification",{
             type : "notification",
             category: "removed",
