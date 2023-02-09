@@ -38,7 +38,7 @@ export class NotificationService {
         this.userService.chatMessages$.next([...this.userService.chatMessages$.value,data]);
       }
       const value =  this.callState$.value;
-      if(value && data && value?.roomID !== data?.roomID){
+      if(value && data && value?.roomID !== data?.roomID && value?.message === 'accepted'){
         return;
       }
       this.callState$.next(data);
