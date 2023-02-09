@@ -11,7 +11,7 @@
  
  
 # Commands to run the sever and client locally
-1.) npm i -f \
+1.) npm i \
 2.) npm run db:generate \
 3.) npm run db:migrate \
 4.) npx nx serve client - starts angular client @ port 4200 \
