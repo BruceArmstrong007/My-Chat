@@ -1,26 +1,28 @@
 # Trying out new technologies - tRPC , prisma , zod , NX workspace , Tailwind , OnPush with Standalone components
 
 # Chat App - Features
- Auth with JWT
- Find , add , remove friends, reject or accept friend request
- Realtime notifications
- Chat with friends
- Change profile picture with url , password or username
- Dark and light mode
+ Auth with JWT \
+ Find , add , remove friends, reject or accept friend request \
+ Realtime notifications \
+ Chat with friends \
+ Change profile picture with url , password or username \
+ Dark and light mode \
+ Video Call Friends, mute audio / video on video call \
+ 
  
 # Commands to run the sever and client locally
-1.) npm i -f
-2.) npm run db:generate
-3.) npm run db:migrate
-4.) npx nx serve client - starts angular client @ port 4200
-5.) npx nx serve server - starts trpc http server @ port 3333 and trpc ws server @ port 3001
-6.) npm run db:show - to host visual representation of sqlite DB @ port 5000
+1.) npm i \
+2.) npm run db:generate \
+3.) npm run db:migrate \
+4.) npx nx serve client - starts angular client @ port 4200 \
+5.) npx nx serve server - starts trpc http server @ port 3333 \
+6.) npm run db:show - to host visual representation of sqlite DB @ port 5000 \
 
 
 
 
 # Images
-<img width="960" alt="image" src="https://user-images.githubusercontent.com/48177059/217789784-bdb7527c-6db4-41c4-b86f-03d220b8dbda.png">
+<img width="960" alt="image" src="https://user-images.githubusercontent.com/48177059/217805563-5ac2a9e9-a342-4e29-8d06-d774e6d47a43.png">
 <img width="957" alt="image" src="https://user-images.githubusercontent.com/48177059/217785923-382ea051-fc89-45c2-80d9-22b2ccfdff3a.png">
 <img width="960" alt="resetpassword" src="https://user-images.githubusercontent.com/48177059/213621138-4e94d9c2-0c0b-40bc-825e-f89d8b82a09f.png">
 <img width="959" alt="profile" src="https://user-images.githubusercontent.com/48177059/213621142-851891d8-2b29-4feb-8115-827214b811d1.png">
