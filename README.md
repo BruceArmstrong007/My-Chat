@@ -1,20 +1,22 @@
 # Trying out new technologies - tRPC , prisma , zod , NX workspace , Tailwind , OnPush with Standalone components
 
 # Chat App - Features
- Auth with JWT
- Find , add , remove friends, reject or accept friend request
- Realtime notifications
- Chat with friends
- Change profile picture with url , password or username
- Dark and light mode
+ Auth with JWT \
+ Find , add , remove friends, reject or accept friend request \
+ Realtime notifications \
+ Chat with friends \
+ Change profile picture with url , password or username \
+ Dark and light mode \
+ Video Call Friends, mute audio / video on video call \
+ 
  
 # Commands to run the sever and client locally
-1.) npm i -f
-2.) npm run db:generate
-3.) npm run db:migrate
-4.) npx nx serve client - starts angular client @ port 4200
-5.) npx nx serve server - starts trpc http server @ port 3333 and trpc ws server @ port 3001
-6.) npm run db:show - to host visual representation of sqlite DB @ port 5000
+1.) npm i -f \
+2.) npm run db:generate \
+3.) npm run db:migrate \
+4.) npx nx serve client - starts angular client @ port 4200 \
+5.) npx nx serve server - starts trpc http server @ port 3333 \
+6.) npm run db:show - to host visual representation of sqlite DB @ port 5000 \
 
 
 
