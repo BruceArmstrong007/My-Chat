@@ -44,7 +44,7 @@ export class CallModalComponent {
       message : "accepted",
       type: "call",
       created_at : new Date()
-    },"callResponse");
+    },"videoCall");
     this.notificationService.connectPeer(this.dataValue?.peerID)
   }
 
@@ -63,7 +63,7 @@ export class CallModalComponent {
     message : message,
     type: "call",
     created_at : new Date()
-    },"callResponse");
+    },"videoCall");
   }
 
 

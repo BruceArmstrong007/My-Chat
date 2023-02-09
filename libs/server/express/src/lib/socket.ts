@@ -51,16 +51,12 @@ export class ServerSocket {
             socket.to(data?.roomID).emit(data?.roomID,{...data,...save});
         });
 
-        socket.on("callRequest",async (data:any)=>{
+        socket.on("videoCall",async (data:any)=>{
           const save = await createMessage({from:data?.from, to:data?.to, message:data?.message, type: data?.type});
           socket.to(data?.roomID).emit("call",{...data,...save});
         });
 
 
-        socket.on("callResponse",async(data:any)=>{
-          const save = await createMessage({from:data?.from, to:data?.to, message:data?.message, type: data?.type});
-          socket.to(data?.roomID).emit("call",data);
-       });
 
 
 

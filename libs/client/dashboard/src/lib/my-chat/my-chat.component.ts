@@ -68,7 +68,7 @@ ngAfterViewInit(){
       type : "call",
       created_at : new Date()
     };
-    this.notificationService.call(data,"callRequest");
+    this.notificationService.call(data,"videoCall");
   });
 
   }
