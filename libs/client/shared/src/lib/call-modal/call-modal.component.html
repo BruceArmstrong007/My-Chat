@@ -19,6 +19,10 @@
   <mat-card-footer class="bg-green-600 text-white">
     <div class="py-2 flex justify-evenly items-center">
       <button *ngIf="!(data$ | async)?.isCaller && (data$ | async)?.message !== 'accepted'" [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'green'}" (click)="accept()" mat-mini-fab><mat-icon>call</mat-icon></button>
+      <ng-container  *ngIf="(data$ | async)?.message === 'accepted'" >
+        <button [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'blue'}" (click)="toggleAudio()" mat-mini-fab><mat-icon>{{enableAudio ? 'mic' : 'mic_off'}}</mat-icon></button>
+        <button [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'purple'}" (click)="toggleVideo()" mat-mini-fab><mat-icon>{{enableVideo ? 'videocam' : 'videocam_off'}}</mat-icon></button>
+      </ng-container>
       <button [ngStyle]="{'transform': 'scale(0.6)','color':'white','background-color': 'red'}" (click)="reject()" mat-mini-fab><mat-icon>call_end</mat-icon></button>
     </div>
    </mat-card-footer>

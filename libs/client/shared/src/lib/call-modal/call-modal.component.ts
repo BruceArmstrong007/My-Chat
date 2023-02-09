@@ -22,6 +22,10 @@ export class CallModalComponent {
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
   roomID !:string;
+  enableAudio = true;
+  enableVideo = true;
+  localAudioTrack !: MediaStreamTrack;
+  localVideoTrack !: MediaStreamTrack;
   get dataValue(){
     return this.data$.value;
   }
@@ -30,9 +34,30 @@ export class CallModalComponent {
     this.roomID = this.authService.generateRoomID(this.dataValue?.from,this.dataValue?.to);
 
     this.notificationService.localStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
-    .subscribe(stream => this.localVideo.nativeElement.srcObject = stream);
+    .subscribe((stream:MediaStream) => {
+      if(!stream) return;
+      this.localAudioTrack = stream.getAudioTracks()[0]; //.find((track:MediaStreamTrack) => track.kind == 'audio')
+      this.localVideoTrack = stream.getVideoTracks()[0]; //.find((track:MediaStreamTrack) => track.kind == 'video')
+
+      this.localVideo.nativeElement.srcObject = stream;
+    });
     this.notificationService.remoteStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
-    .subscribe(stream => this.remoteVideo.nativeElement.srcObject = stream);
+    .subscribe(stream => {
+      if(!stream) return;
+      this.remoteVideo.nativeElement.srcObject = stream
+    });
+  }
+
+  toggleAudio(){
+    this.enableAudio = !this.enableAudio;
+    console.log(this.localAudioTrack?.enabled);
+    this.localAudioTrack.enabled = this.enableAudio;
+  }
+
+  toggleVideo(){
+    this.enableVideo = !this.enableVideo;
+    console.log(this.localVideoTrack?.enabled);
+    this.localVideoTrack.enabled = this.enableVideo;
   }
 
   accept(){

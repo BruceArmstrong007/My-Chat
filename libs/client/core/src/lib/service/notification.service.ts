@@ -37,9 +37,8 @@ export class NotificationService {
       if(this.authService.generateRoomID(this.userService.chatMessages$.value[0]?.from,this.userService.chatMessages$.value[0]?.to) === data?.roomID){
         this.userService.chatMessages$.next([...this.userService.chatMessages$.value,data]);
       }
-
       const value =  this.callState$.value;
-      if(value?.message == 'accepted' && data?.message === "calling"){
+      if(value && data && value?.roomID !== data?.roomID){
         return;
       }
       this.callState$.next(data);
@@ -52,7 +51,7 @@ export class NotificationService {
     this.getUserMedia = ( this.navigator.getUserMedia || this.navigator.webkitGetUserMedia || this.navigator.mozGetUserMedia || this.navigator.msGetUserMedia );
 
     this.peer.on('call',(call) =>{
-      this.getUserMedia({video: true, audio: false}, (stream:MediaStream) => {
+      this.getUserMedia({video: true, audio: true}, (stream:MediaStream) => {
         call.answer(stream); // Answer the call with an A/V stream.
         this.localStream$.next(stream);
         call.on('stream', (remoteStream:MediaStream) => {
@@ -85,7 +84,7 @@ export class NotificationService {
 
 
   connectPeer(peerID : any){
-    this.getUserMedia({video: true, audio: false}, (stream:MediaStream) =>{
+    this.getUserMedia({video: true, audio: true}, (stream:MediaStream) =>{
       const call = this.peer.call(peerID, stream);
       this.localStream$.next(stream);
       call.on('stream', (remoteStream: MediaStream) =>{
