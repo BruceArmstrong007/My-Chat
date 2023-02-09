@@ -20,6 +20,8 @@
 
 
 # Images
+<img width="960" alt="image" src="https://user-images.githubusercontent.com/48177059/217789784-bdb7527c-6db4-41c4-b86f-03d220b8dbda.png">
+<img width="957" alt="image" src="https://user-images.githubusercontent.com/48177059/217785923-382ea051-fc89-45c2-80d9-22b2ccfdff3a.png">
 <img width="960" alt="resetpassword" src="https://user-images.githubusercontent.com/48177059/213621138-4e94d9c2-0c0b-40bc-825e-f89d8b82a09f.png">
 <img width="959" alt="profile" src="https://user-images.githubusercontent.com/48177059/213621142-851891d8-2b29-4feb-8115-827214b811d1.png">
 <img width="960" alt="chat2" src="https://user-images.githubusercontent.com/48177059/213621146-580b7fc5-ea29-4fc6-b126-37ad34b1fe7f.png">
