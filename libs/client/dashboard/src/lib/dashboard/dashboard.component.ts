@@ -24,7 +24,7 @@ export class  DashboardComponent {
     this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe((user:any)=>{
       if(user?.id){
       this.currentUser = user;
-      this.notificationService.connectWs(user?.id);
+      this.notificationService.connectWs(user?.id,user?.contact);
       }
     });
 
@@ -42,24 +42,17 @@ export class  DashboardComponent {
       return {...res, currentUser : this.currentUser,contactUser : contactUser, isCaller};
     })).subscribe((res:any)=>{
       // status : calling, missed , rejected, cancelled, accepted, received
-      console.log(res);
       if(!res){
         return;
       }
-      if(res?.status === 'missed' || res?.status === 'rejected' || res?.status === 'cancelled' || res?.status === 'received'){
-        this.dialog.closeAll();
+      if(res?.message === 'missed' || res?.message === 'rejected' || res?.message === 'cancelled' || res?.message === 'received'){
+        this.closeDialog(res);
       }
-      if(res?.status === 'calling'){
+      if(res?.message === 'calling'){
         this.openDialog();
       }
       this.notificationService.peerData$.next(res);
-    })
-  }
-
-  ngOnDestroy(){
-    this.destroy$.next();
-    this.dialog.closeAll();
-    this.destroy$.complete();
+    });
   }
 
   openDialog(): void {
@@ -68,5 +61,17 @@ export class  DashboardComponent {
       exitAnimationDuration: '250ms',
       disableClose: true
     });
+  }
+
+  closeDialog(data : any = null): void{
+    this.dialog.closeAll();
+    if(data?.isCaller){
+      this.notificationService.destroyPeer();
+    }
+  }
+
+  ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

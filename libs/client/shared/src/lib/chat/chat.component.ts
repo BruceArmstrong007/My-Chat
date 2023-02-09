@@ -35,13 +35,14 @@ export class ChatComponent {
   private readonly destroy$ = new Subject<void>();
   private readonly notificationService = inject(NotificationService);
   @Output() sendMessage : any = new EventEmitter();
+  @Output() videoCall : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
   private readonly changeDedection = inject(ChangeDetectorRef);
   disableScrollDown = false
   @ViewChild('menu') pickerMenu!: MatMenu;
   send(){
     if(!this.message) return;
-      this.sendMessage.emit({message : this.message});
+      this.sendMessage.emit({message : this.message, type : "chat"});
       this.message = '';
   }
 
@@ -50,12 +51,7 @@ export class ChatComponent {
   }
 
   callUser(){
-    this.notificationService.call({
-      from : this.currentUser?.id.toString(),
-      to : this.contactUser?.id.toString(),
-      peerID : this.notificationService.peer?.id,
-      status : "calling"
-    },"callRequest");
+    this.videoCall.emit();
   }
 
   ngAfterViewInit() {

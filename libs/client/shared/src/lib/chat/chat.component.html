@@ -1,14 +1,44 @@
 <div class="w-full h-full flex flex-col">
   <div class="h-5/6 w-full p-2 overflow-auto scroll-smooth" #scrollMe>
     <div *ngFor="let chat of _messageList | async; let last = last" class="w-full">
-      <ng-container *ngIf="chat.from === this.currentUser?.id;else contactMsg">
-        <div class="p-2 flex justify-end">
-          <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : currentUser?.username, image : currentUser?.image}"></my-chat-app-card>
-        </div>
+      <ng-container *ngIf="chat?.type === 'chat';else callMsg">
+        <ng-container *ngIf="chat.from === currentUser?.id;else contactMsg">
+          <div class="p-2 flex justify-end">
+            <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : currentUser?.username, image : currentUser?.image}"></my-chat-app-card>
+          </div>
+        </ng-container>
+        <ng-template #contactMsg>
+          <div class="p-2 flex justify-start">
+            <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : contactUser?.username, image : contactUser?.image}"></my-chat-app-card>
+          </div>
+        </ng-template>
       </ng-container>
-      <ng-template #contactMsg>
-        <div class="p-2 flex justify-start">
-          <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : contactUser?.username, image : contactUser?.image}"></my-chat-app-card>
+      <ng-template #callMsg>
+        <div class="p-2 flex justify-center" *ngIf="chat?.message === 'received' || chat?.message ===  'rejected' || chat?.message === 'missed' || chat?.message === 'cancelled'">
+          <p class="text-sm">
+            <ng-container *ngIf="chat.from === currentUser?.id;else elseCall">
+              <span *ngIf="chat?.message === 'received'">
+                <mat-icon class="text-green-600 scale-75">call_received</mat-icon> : You had a call with {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'rejected'">
+              <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : Your call was rejected by {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
+                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : Your call was missed by {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+            </ng-container>
+            <ng-template #elseCall>
+              <span *ngIf="chat?.message === 'received'">
+                <mat-icon class="text-green-600 scale-75">call_received</mat-icon> : You had a call with {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'rejected'">
+                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : You rejected a call from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
+                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : You missed a call from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+            </ng-template>
+          </p>
         </div>
       </ng-template>
     </div>

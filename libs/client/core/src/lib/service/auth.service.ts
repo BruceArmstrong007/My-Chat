@@ -2,9 +2,11 @@ import { IS_LOGGED_STORAGE_KEY } from '../config/auth.config';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '@prisma/client';
-import { BehaviorSubject, iif, map, of, switchMap, tap, filter } from 'rxjs';
+import { BehaviorSubject, iif, map, of, switchMap, tap } from 'rxjs';
 import { injectToken } from '../core.di';
 import { HttpService } from '../utils/http.service';
+import { injectConfig } from '../core.di';
+import io from 'socket.io-client';
 
 type UserData = Omit<User, 'password' | 'refreshToken'>;
 
@@ -17,6 +19,18 @@ export class AuthService {
   private readonly token = injectToken();
   private readonly http = inject(HttpService);
   $user = this.currentUser$.asObservable();
+  readonly contactLinks$ : BehaviorSubject<any> = new BehaviorSubject([]);
+
+  private readonly url = injectConfig();
+
+
+  socket = io(this.url.WS_URL,{
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
+    autoConnect: true,
+    withCredentials: true
+  });
+
 
   currentUser(){
     return  this.currentUser$.getValue();
@@ -24,7 +38,7 @@ export class AuthService {
 
   friends(){
     return this.currentUser$.pipe(
-    map((user:any)=> user?.contact.filter((contact:any) => contact?.status === "friend")),
+    map((user:any)=> user?.contact.filter((contact:any) => contact?.status === "friend"))
     )
   }
 
@@ -66,7 +80,9 @@ export class AuthService {
   getUser(login: boolean = false){
     return this.http.get('/user').pipe(
       map((user:any) => {
-        this.authenticateUser(user?.data);
+        const crntUser = user?.data;
+        this.linkContact(crntUser?.id,crntUser?.contact,'connectFriend');
+        this.authenticateUser(crntUser);
         if(login) this.router.navigateByUrl("/user")
       })
     )
@@ -88,4 +104,30 @@ export class AuthService {
   }
 
 
+  linkContact(id: number,contact:any[] = [],option: string){
+    let contactIDs:any[] = [];
+    const contacts : any[] = this.contactLinks$.value;
+
+      contact.forEach((user:any)=>{
+        const length = contacts.some(contact => contact?.id === user?.id);
+
+        if(!length){
+          contactIDs = [...contactIDs,{id: user?.id,roomID :this.generateRoomID(id,user?.id)}];
+        }
+      });
+    this.socket.emit(option,{contactIDs});
+    if(option === 'connectFriend') this.contactLinks$.next([...contacts,contactIDs]);
+    else this.contactLinks$.next([]);
+  }
+
+
+  generateRoomID(id1:any,id2:any){
+    let id = '';
+    if(id1 > id2){
+      id = id2.toString()+'-'+id1.toString();
+    }else{
+      id = id1.toString()+'-'+id2.toString();
+    }
+    return id;
+  }
 }

@@ -2,9 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Contacts, User } from '@prisma/client';
 import { map, switchMap, iif, BehaviorSubject, tap } from 'rxjs';
 import { AuthService } from './auth.service';
-import { injectConfig } from '../core.di';
 import { HttpService } from '../utils/http.service';
-import io from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root',
@@ -13,20 +11,13 @@ export class UserService {
   private readonly authService = inject(AuthService);
   readonly chatMessages$ : any = new BehaviorSubject([]);
   private readonly http = inject(HttpService);
-  private readonly url = injectConfig();
 
-  socket = io(this.url.WS_URL,{
-    reconnectionAttempts: 5,
-    reconnectionDelay: 1000,
-    autoConnect: true,
-    withCredentials: true
-  });
-
-
+  socket = this.authService?.socket;
 
    emptyChat(){
     this.chatMessages$.next([]);
   }
+
 
 
   findUser(data:Pick<User, 'username'>) {
@@ -63,10 +54,8 @@ export class UserService {
     )
   }
 
-  connectWs(id : string){
-        this.socket.connect();
-        this.socket.emit('joinChat',{id});
-        this.socket.on(id,(message:any)=>{
+  connectWs({roomID} : any){
+        this.socket.on(roomID,(message:any)=>{
           this.chatMessages$.next([...this.chatMessages$.value,message]);
         })
         this.socket.on("error", (error:any) => {
@@ -74,9 +63,7 @@ export class UserService {
         });
   }
 
-  disconnectWs(id:string){
-    if(id)
-      this.socket.emit('leaveChat',{id});
+  disconnectWs(){
     this.socket.disconnect();
   }
 
@@ -90,13 +77,7 @@ export class UserService {
   }
 
 
-  generateRoomID(id1:any,id2:any){
-    let id = '';
-    if(id1 > id2){
-      id = id2.toString()+'-'+id1.toString();
-    }else{
-      id = id1.toString()+'-'+id2.toString();
-    }
-    return id;
-  }
+
+
+
 }

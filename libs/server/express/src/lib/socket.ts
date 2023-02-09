@@ -26,43 +26,40 @@ export class ServerSocket {
     }
 
     StartListeners = (socket: Socket) => {
-        logger.info("StartListeners");
-
-        socket.on("joinChat",async (data:any) => {
-            await socket.join(data?.id);
-            logger.info(socket?.id+" joined " + data?.id);
-        });
-
-        socket.on("leaveChat",async (data:any) => {
-            await socket.leave(data?.id);
-            logger.info(socket?.id+" left " + data?.id);
-        });
-
-        socket.on("message",async(data:any)=>{
-            const save = await createMessage({from:data?.from,to:data?.to,message:data?.message});
-            await socket.to(data?.id).emit(data?.id,save);
-        });
-
-
 
         socket.on("user",async (data:any) => {
-          await socket.join(data?.id);
+          await socket.join(data?.roomID);
+        });
+
+        socket.on("connectFriend",async (data:any)=>{
+          data?.contactIDs.forEach(async(contact:any)=>{
+            await socket.join(contact?.roomID);
+            logger.info('user '+contact?.id+ ' connected to '+contact?.roomID)
+          });
+        });
+
+        socket.on("disconnectFriend",async (data:any)=>{
+          data?.contactIDs.forEach(async(contact:any)=>{
+            await socket.leave(contact?.roomID);
+            logger.info('user '+contact?.id+ ' disconnected from '+contact?.roomID)
+          });
+        });
+
+
+        socket.on("message",async(data:any)=>{
+            const save = await createMessage({from:data?.from, to:data?.to, message:data?.message, type: data?.type});
+            socket.to(data?.roomID).emit(data?.roomID,{...data,...save});
         });
 
         socket.on("callRequest",async (data:any)=>{
-           socket.join(data?.to);
-           logger.info(data?.from+" joined room " + data?.to);
-           this.io.to(data?.to).emit("call",data);
+          const save = await createMessage({from:data?.from, to:data?.to, message:data?.message, type: data?.type});
+          socket.to(data?.roomID).emit("call",{...data,...save});
         });
 
 
         socket.on("callResponse",async(data:any)=>{
-          this.io.to(data?.to).emit("call",data);
-       });
-
-       socket.on("callEnd",async(data:any)=>{
-        socket.leave(data?.to);
-        logger.info(data?.from+" left room " + data?.to);
+          const save = await createMessage({from:data?.from, to:data?.to, message:data?.message, type: data?.type});
+          socket.to(data?.roomID).emit("call",data);
        });
 
 

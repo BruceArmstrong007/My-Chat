@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
-import { NotificationService } from '@client/core';
+import { AuthService, NotificationService } from '@client/core';
 import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
 
 @Component({
@@ -16,16 +16,19 @@ import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
 })
 export class CallModalComponent {
   private readonly destroy$ : any = new Subject();
-  notificationService = inject(NotificationService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly authService = inject(AuthService);
   data$ : BehaviorSubject<any> = this.notificationService?.peerData$;
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
-
+  roomID !:string;
   get dataValue(){
     return this.data$.value;
   }
 
   ngOnInit(){
+    this.roomID = this.authService.generateRoomID(this.dataValue?.from,this.dataValue?.to);
+
     this.notificationService.localStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
     .subscribe(stream => this.localVideo.nativeElement.srcObject = stream);
     this.notificationService.remoteStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
@@ -34,34 +37,38 @@ export class CallModalComponent {
 
   accept(){
     this.notificationService.call({
+      roomID :  this.roomID,
       from : this.dataValue?.from,
       to : this.dataValue?.to,
       peerID : this.dataValue?.peerID,
-      status : "accepted"
+      message : "accepted",
+      type: "call",
+      created_at : new Date()
     },"callResponse");
     this.notificationService.connectPeer(this.dataValue?.peerID)
   }
 
   reject(){
-    let status = 'rejected';
-    if(this.dataValue?.status === 'calling'){
-      if(this.dataValue.isCaller) status = 'cancelled';
+    let message = 'rejected';
+    if(this.dataValue?.message === 'calling'){
+      if(this.dataValue.isCaller) message = 'cancelled';
     }else{
-      status = 'received';
+      message = 'received';
     }
     this.notificationService.call({
+    roomID :  this.roomID,
     from : this.dataValue?.from,
     to : this.dataValue?.to,
     peerID : this.dataValue?.peerID,
-    status : status
-  },"callResponse");
-   this.notificationService.destroyPeer();
+    message : message,
+    type: "call",
+    created_at : new Date()
+    },"callResponse");
   }
 
 
 
   ngOnDestroy(){
-
     this.notificationService.destroyPeer();
     this.destroy$.next();
     this.destroy$.complete();
