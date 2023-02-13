@@ -1,6 +1,6 @@
 import { takeUntil, Subject, distinctUntilChanged } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import {  NotificationService, ToggleService } from '@client/core';
+import {  ShareService, ToggleService } from '@client/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, inject, HostListener } from '@angular/core';
@@ -23,7 +23,7 @@ export class HeaderComponent {
   notifications : any = [];
   @ViewChild('mobileMenu', { read: ElementRef }) mobileMenu!: ElementRef;
   private readonly destroy$ : any = new Subject();
-  private readonly notificationService = inject(NotificationService);
+  private readonly shareService = inject(ShareService);
 
   toggle = inject(ToggleService);
   readonly authService = inject(AuthService);
@@ -37,8 +37,8 @@ export class HeaderComponent {
       this.user = user;
     });
 
-    this.notificationService.notify$.pipe(distinctUntilChanged(),takeUntil(this.destroy$)).subscribe((notification:any)=>{
-      this.notificationService.notification(notification);
+    this.shareService.notify$.pipe(distinctUntilChanged(),takeUntil(this.destroy$)).subscribe((notification:any)=>{
+      this.shareService.notification(notification);
       if(notification?.category === 'accepted' || notification?.category === 'received'){
         this.notifications = [...this.notifications,notification];
         this.badgeHidden = false;

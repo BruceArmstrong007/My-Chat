@@ -10,5 +10,5 @@ export * from './lib/utils/request-handler.service';
 export * from './lib/utils/prompt-handler.service';
 export * from './lib/service/user.service';
 export * from './lib/resolver/token.resolver';
-export * from './lib/service/notification.service';
+export * from './lib/service/share.service';
 export * from './lib/interceptor/http.interceptor';

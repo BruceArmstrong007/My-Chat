@@ -1,4 +1,4 @@
-import { BehaviorSubject, from, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import io, { Socket } from 'socket.io-client';
 import { inject, Injectable } from '@angular/core';
@@ -8,7 +8,7 @@ import Peer from 'peerjs';
 @Injectable({
   providedIn: 'root',
 })
-export class NotificationService {
+export class ShareService {
   private readonly authService = inject(AuthService);
   private readonly notifications$ = new Subject();
   private readonly userService = inject(UserService);

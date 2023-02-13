@@ -49,13 +49,8 @@ export class RegisterComponent {
     }
       this.authService.register(this.registerForm.getRawValue())
       .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data:any) => {
+      .subscribe(() => {
           this.router.navigateByUrl('/login');
-        },
-        error: (err:any) => {
-          console.log(err);
-        },
       });
   }
 

@@ -2,8 +2,8 @@ import { takeUntil, Subject, distinctUntilChanged, map } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService, NotificationService } from '@client/core';
-import {MatDialog, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import { AuthService, ShareService } from '@client/core';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { CallModalComponent } from '@client/shared';
 
 @Component({
@@ -15,7 +15,7 @@ import { CallModalComponent } from '@client/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class  DashboardComponent {
-  notificationService = inject(NotificationService);
+  shareService = inject(ShareService);
   authService = inject(AuthService);
   currentUser : any;
   private readonly destroy$ : any = new Subject();
@@ -24,11 +24,11 @@ export class  DashboardComponent {
     this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe((user:any)=>{
       if(user?.id){
       this.currentUser = user;
-      this.notificationService.connectWs(user?.id,user?.contact);
+      this.shareService.connectWs(user?.id,user?.contact);
       }
     });
 
-    this.notificationService.callState$.pipe(distinctUntilChanged(),takeUntil(this.destroy$),map((res:any)=>{
+    this.shareService.callState$.pipe(distinctUntilChanged(),takeUntil(this.destroy$),map((res:any)=>{
 
       let contactID!:number, isCaller = false;
       if(this.currentUser?.id == res?.from){
@@ -51,7 +51,7 @@ export class  DashboardComponent {
       if(res?.message === 'calling'){
         this.openDialog();
       }
-      this.notificationService.peerData$.next(res);
+      this.shareService.peerData$.next(res);
     });
   }
 
@@ -66,7 +66,7 @@ export class  DashboardComponent {
   closeDialog(data : any = null): void{
     this.dialog.closeAll();
     if(data?.isCaller){
-      this.notificationService.destroyPeer();
+      this.shareService.destroyPeer();
     }
   }
 

@@ -1,4 +1,4 @@
-import { UserService, AuthService, NotificationService } from '@client/core';
+import { UserService, AuthService, ShareService } from '@client/core';
 import { Location } from '@angular/common';
 import {  Observable, Subject, takeUntil } from 'rxjs';
 import { ChatComponent } from '@client/shared';
@@ -22,7 +22,7 @@ export class MyChatComponent {
   messageList$: any = new Subject();
   private readonly destroy$ = new Subject<void>();
   readonly userService = inject(UserService);
-  readonly notificationService = inject(NotificationService);
+  readonly shareService = inject(ShareService);
   readonly authService = inject(AuthService);
   private readonly location = inject(Location);
   friendList$!:Observable<any[]>;
@@ -63,12 +63,12 @@ ngAfterViewInit(){
       roomID : id,
       from : user_id,
       to : contact_id,
-      peerID : this.notificationService.peer?.id,
+      peerID : this.shareService.peer?.id,
       message : "calling",
       type : "call",
       created_at : new Date()
     };
-    this.notificationService.call(data,"videoCall");
+    this.shareService.call(data,"videoCall");
   });
 
   }

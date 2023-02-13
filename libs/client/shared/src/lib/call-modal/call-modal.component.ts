@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
-import { AuthService, NotificationService } from '@client/core';
+import { AuthService, ShareService } from '@client/core';
 import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
 
 @Component({
@@ -16,9 +16,9 @@ import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
 })
 export class CallModalComponent {
   private readonly destroy$ : any = new Subject();
-  private readonly notificationService = inject(NotificationService);
+  private readonly shareService = inject(ShareService);
   private readonly authService = inject(AuthService);
-  data$ : BehaviorSubject<any> = this.notificationService?.peerData$;
+  data$ : BehaviorSubject<any> = this.shareService?.peerData$;
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
   roomID !:string;
@@ -33,7 +33,7 @@ export class CallModalComponent {
   ngOnInit(){
     this.roomID = this.authService.generateRoomID(this.dataValue?.from,this.dataValue?.to);
 
-    this.notificationService.localStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
+    this.shareService.localStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
     .subscribe((stream:MediaStream) => {
       if(!stream) return;
       this.localAudioTrack = stream.getAudioTracks()[0]; //.find((track:MediaStreamTrack) => track.kind == 'audio')
@@ -41,7 +41,7 @@ export class CallModalComponent {
 
       this.localVideo.nativeElement.srcObject = stream;
     });
-    this.notificationService.remoteStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
+    this.shareService.remoteStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
     .subscribe(stream => {
       if(!stream) return;
       this.remoteVideo.nativeElement.srcObject = stream
@@ -61,7 +61,7 @@ export class CallModalComponent {
   }
 
   accept(){
-    this.notificationService.call({
+    this.shareService.call({
       roomID :  this.roomID,
       from : this.dataValue?.from,
       to : this.dataValue?.to,
@@ -70,7 +70,7 @@ export class CallModalComponent {
       type: "call",
       created_at : new Date()
     },"videoCall");
-    this.notificationService.connectPeer(this.dataValue?.peerID)
+    this.shareService.connectPeer(this.dataValue?.peerID)
   }
 
   reject(){
@@ -80,7 +80,7 @@ export class CallModalComponent {
     }else{
       message = 'received';
     }
-    this.notificationService.call({
+    this.shareService.call({
     roomID :  this.roomID,
     from : this.dataValue?.from,
     to : this.dataValue?.to,
@@ -94,7 +94,7 @@ export class CallModalComponent {
 
 
   ngOnDestroy(){
-    this.notificationService.destroyPeer();
+    this.shareService.destroyPeer();
     this.destroy$.next();
     this.destroy$.complete();
   }

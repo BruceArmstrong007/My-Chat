@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ViewEncapsulation, ChangeDetectionStrategy, Component, inject, ViewChild, EventEmitter, Output, Input, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToggleService, NotificationService } from '@client/core';
+import { ToggleService, ShareService } from '@client/core';
 import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 @Component({
@@ -33,7 +33,7 @@ export class ChatComponent {
   message = '';
   toggle : any = inject(ToggleService);
   private readonly destroy$ = new Subject<void>();
-  private readonly notificationService = inject(NotificationService);
+  private readonly shareService = inject(ShareService);
   @Output() sendMessage : any = new EventEmitter();
   @Output() videoCall : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
