@@ -1,8 +1,5 @@
 # Trying out new technologies - tRPC , prisma , zod , NX workspace , Tailwind , OnPush with Standalone components
 
-# Note
-  I dont like some of this things how it turned out since im learning tailwind as well as reactive angular with On Push
-
 # Chat App - Features
  Auth with JWT \
  Find , add , remove friends, reject or accept friend request \
@@ -12,6 +9,7 @@
  Dark and light mode \
  Video Call Friends, mute audio / video on video call \
  File Transfer
+ Responsive
  
  
 # Commands to run the sever and client locally
