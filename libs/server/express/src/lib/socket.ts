@@ -58,8 +58,7 @@ export class ServerSocket {
 
         socket.on('transfer',async (data:any)=>{
           const save = await createMessage({from:data?.from, to:data?.to, message:data?.message, type: data?.type, extra : data?.extra});
-          logger.info(save)
-          socket.to(data?.roomID).emit("transfer",data);
+          socket.to(data?.roomID).emit("transfer",{...data,...save});
         })
 
 

@@ -23,6 +23,7 @@ export class ChatComponent {
   messageText = 'Enter something to say..';
   @Input() currentUser : any;
   @Input() contactUser : any;
+  @ViewChild('file') fileTag : any;
   _messageList !: Observable<any[]>;
   @Input() set messageList(value:any){
       this._messageList = value;
@@ -114,6 +115,7 @@ ngOnDestroy(){
 files(data:any){
   const file = data?.files[0] ? data?.files[0] : null;
   this.transferFile.emit(file);
+  this.fileTag.nativeElement.value = "";
 }
 
 
