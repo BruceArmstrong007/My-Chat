@@ -47,8 +47,6 @@ export class ShareService {
     });
 
     this.socket.on("transfer",(data:any)=>{
-      console.log(data);
-
       if(this.authService.generateRoomID(this.userService.chatMessages$.value[0]?.from,this.userService.chatMessages$.value[0]?.to) === data?.roomID){
         this.userService.chatMessages$.next([...this.userService.chatMessages$.value,data]);
       }

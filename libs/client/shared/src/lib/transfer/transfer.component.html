@@ -1,17 +1,21 @@
-<mat-card [ngClass]="{'cardWidth': ((data$ | async)?.message === 'accepted')}">
+<mat-card class="cardSize">
   <mat-card-header class="bg-blue-600 text-white">
     <button [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" mat-mini-fab>
       <img class="rounded-xl" alt="" [src]="(data$ | async)?.contactUser?.image ? (data$ | async)?.contactUser?.image : './assets/images/default.png'">
     </button>
      <div class="flex justify-center items-center"><span class="text-md">{{(data$ | async)?.contactUser?.username}}</span></div>
     </mat-card-header>
-  <mat-card-content class="bg-blue-600 text-white flex justify-center items-center">
-    <div *ngIf="(data$ | async)?.message !== 'accepted';else transferBlock" class="py-2 h-10 flex justify-center items-center">
-      <div class="text-md">{{(data$ | async)?.message}}</div>
+  <mat-card-content class="bg-blue-600  text-white flex justify-center items-center">
+    <div *ngIf="(data$ | async)?.message !== 'accepted';else transferBlock" class="py-2 flex flex-col justify-center items-center">
+      <div class="w-100 text-md py-1">File Transfer {{(data$ | async)?.message | titlecase}}</div>
+      <div class="w-100 text-sm  py-1 flex flex-col justify-start items-center">
+        <span class="py-1">Name : {{ this.fileData?.name }}</span>
+        <span class="py-1">Size : {{ (this.fileData?.size | fileSize) }}</span>
+      </div>
     </div>
     <ng-template #transferBlock>
       <div class="w-100 p-2 flex justify-between items-center">
-        <p>{{this.fileData?.name}}</p>
+        <p>{{this.fileData?.name + ' (size: ' + (this.fileData?.size | fileSize) + ')' }}</p>
         <p>{{(progress$ | async) + '%'}}</p>
       </div>
       <mat-progress-bar class="py-2" mode="determinate" [value]="(progress$ | async)"></mat-progress-bar>

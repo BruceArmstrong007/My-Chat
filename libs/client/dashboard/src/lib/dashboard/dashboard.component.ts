@@ -67,7 +67,6 @@ export class  DashboardComponent {
       const contactUser = this.currentUser.contact.find((contact:any) => contact?.id === contactID);
       return {...res, currentUser : this.currentUser,contactUser : contactUser, isCaller};
     })).subscribe((res:any)=>{
-      console.log(res);
 
       // status : request, missed , rejected, cancelled, accepted, received
       if(!res){
