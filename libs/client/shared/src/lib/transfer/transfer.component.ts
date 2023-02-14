@@ -6,7 +6,7 @@ import {MatCardModule} from '@angular/material/card';
 import { AuthService, ShareService } from '@client/core';
 import { BehaviorSubject, takeUntil, Subject } from 'rxjs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { FileSizePipe } from './file-size.pipe';
+import { FileSizePipe } from '../file-size.pipe';
 
 @Component({
   selector: 'my-chat-transfer',

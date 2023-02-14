@@ -1,7 +1,7 @@
 <div class="w-full h-full flex flex-col">
   <div class="h-5/6 w-full p-2 overflow-auto scroll-smooth" #scrollMe>
     <div *ngFor="let chat of _messageList | async; let last = last" class="w-full">
-      <ng-container *ngIf="chat?.type === 'chat';else callMsg">
+      <ng-container *ngIf="chat?.type === 'chat'">
         <ng-container *ngIf="chat.from === currentUser?.id;else contactMsg">
           <div class="p-2 flex justify-end">
             <my-chat-app-card [card]="{message : chat?.message , created_at : chat?.created_at, username : currentUser?.username, image : currentUser?.image}"></my-chat-app-card>
@@ -13,7 +13,7 @@
           </div>
         </ng-template>
       </ng-container>
-      <ng-template #callMsg>
+      <ng-container *ngIf="chat?.type === 'call'">
         <div class="p-2 flex justify-center" *ngIf="chat?.message === 'received' || chat?.message ===  'rejected' || chat?.message === 'missed' || chat?.message === 'cancelled'">
           <p class="text-sm">
             <ng-container *ngIf="chat.from === currentUser?.id;else elseCall">
@@ -40,7 +40,35 @@
             </ng-template>
           </p>
         </div>
-      </ng-template>
+      </ng-container>
+      <ng-container *ngIf="chat?.type === 'transfer'">
+        <div class="p-2 flex justify-center" *ngIf="chat?.message === 'received' || chat?.message ===  'rejected' || chat?.message === 'missed' || chat?.message === 'cancelled'">
+          <p class="text-sm">
+            <ng-container *ngIf="chat.from === currentUser?.id;else elseTransfer">
+              <span *ngIf="chat?.message === 'received'">
+                <mat-icon class="text-green-600 scale-75">cloud_done</mat-icon> : your file was transfered to {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'rejected'">
+              <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : {{contactUser.username}} rejected your file transfer on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
+                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : Your file transfer was missed by {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+            </ng-container>
+            <ng-template #elseTransfer>
+              <span *ngIf="chat?.message === 'received'">
+                <mat-icon class="text-green-600 scale-75">cloud_done</mat-icon> : You had a file transfer from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'rejected'">
+                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : You rejected a file transfer from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+              <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
+                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : You missed a file transfer from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              </span>
+            </ng-template>
+          </p>
+        </div>
+      </ng-container>
     </div>
     <div *ngIf="!contactUser" class="w-full h-full flex justify-center items-center">
       <h3 class="text-slate-500">Select your friend to chat 💬</h3>
