@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import { AuthService, ShareService } from '@client/core';
-import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
+import { BehaviorSubject, takeUntil, Subject } from 'rxjs';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'my-chat-transfer',
   standalone: true,
-  imports: [CommonModule,MatIconModule,MatButtonModule,MatCardModule],
+  imports: [CommonModule,MatIconModule,MatButtonModule,MatCardModule,MatProgressBarModule],
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,13 +20,19 @@ export class TransferComponent {
   private readonly shareService = inject(ShareService);
   private readonly authService = inject(AuthService);
   data$ : BehaviorSubject<any> = this.shareService?.transferData$;
+  progress$ : BehaviorSubject<any> = new BehaviorSubject(0);
   roomID !:string;
   connection : any;
   file !: File;
-  chunks : any[] = [];
-  currentChunk = 0;
-  totalChunks = null;
   fileData: any;
+  BYTES_PER_CHUNK = 1200;
+  currentChunk : any = 0;
+  incomingFileInfo : any;
+  incomingFileData : any;
+  bytesReceived : any;
+  progress : any = 0;
+  downloadInProgress = false;
+  fileReader = new FileReader();
 
 
   get dataValue(){
@@ -37,23 +44,10 @@ export class TransferComponent {
 
     this.shareService.peer.on('connection',(conn:any)=> {
       conn.on('data',async(data:any) =>{
-        console.log(data);
-        if (data.type === 'init') {
-          this.totalChunks = data.totalChunks;
-        } else if (data.type === 'chunk') {
-          this.chunks[data.chunkNum] = data.chunk;
-          if (Object.keys(this.chunks).length === this.totalChunks) {
-            // All chunks have been received
-             const file = URL.createObjectURL(await new Blob(this.chunks));
-            // Do something with the file
-            let a = document.createElement('a');
-            a.href = file;
-            a.download = this.fileData.name +'.'+ this.fileData.type;
-            a.click();
-            this.reject();
-          }
-        } else if (data.type === 'progress') {
-          this.updateProgress(data.progress);
+        if( this.downloadInProgress === false ) {
+          this.startDownload( data );
+        } else {
+          this.progressDownload( data );
         }
       });
     })
@@ -64,23 +58,23 @@ export class TransferComponent {
     this.data$.pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if(res?.message === 'accepted'){
         if(this.file){
-          // console.log(this.shareService.peer.id ,res?.contactPeerID);
-
           this.connection = this.shareService.peer.connect(res?.contactPeerID,{reliable:true});
-
-          const fileReader = new FileReader();
-          fileReader.onload = async () =>{
-            const fileContents = fileReader.result;
-            const chunks = this.chunkData(fileContents);
-            this.connection.on('open',()=>{
-              this.connection.send({
-                type: 'init',
-                totalChunks: chunks.length
-              });
-              })
-            await this.sendNextChunk(chunks);
-          };
-          fileReader.readAsArrayBuffer(this.file);
+          this.connection.on('open',()=>{
+            this.connection.send(JSON.stringify({
+              fileName: this.file.name,
+              fileSize: this.file.size
+            }));
+            this.readNextChunk();
+            this.fileReader.onload = ()=> {
+                this.connection.send(this.fileReader.result);
+                this.currentChunk++;
+            if( this.BYTES_PER_CHUNK * this.currentChunk < this.file.size ) {
+              this.readNextChunk();
+            }else{
+            this.progress$.next(((this.currentChunk * this.BYTES_PER_CHUNK / this.file.size) * 100).toFixed(2));
+            }
+            };
+          });
         }
       }
     })
@@ -118,6 +112,39 @@ export class TransferComponent {
   }
 
 
+   readNextChunk() {
+    this.progress$.next(((this.currentChunk * this.BYTES_PER_CHUNK / this.file.size) * 100).toFixed(2));
+    let start = this.BYTES_PER_CHUNK * this.currentChunk;
+    let end = Math.min( this.file.size, start + this.BYTES_PER_CHUNK );
+    this.fileReader.readAsArrayBuffer( this.file.slice( start, end ) );
+}
+
+
+ startDownload(data : any) {
+  this.incomingFileInfo = JSON.parse( data.toString() );
+  this.incomingFileData = [];
+  this.bytesReceived = 0;
+  this.downloadInProgress = true;
+ }
+
+ progressDownload(data : any) {
+  this.bytesReceived += data.byteLength;
+  this.incomingFileData.push( data );
+  this.progress$.next(((this.bytesReceived / this.incomingFileInfo.fileSize ) * 100).toFixed(2));
+  if(this.bytesReceived === this.incomingFileInfo.fileSize ) {
+    this.endDownload();
+  }
+ }
+
+endDownload() {
+  this.downloadInProgress = false;
+  let blob = new window.Blob( this.incomingFileData );
+  let anchor = document.createElement( 'a' );
+  anchor.href = URL.createObjectURL( blob );
+  anchor.download = this.fileData.name;
+  anchor.click();
+  this.reject();
+ }
 
   ngOnDestroy(){
     this.shareService.destroyPeer();
@@ -127,59 +154,15 @@ export class TransferComponent {
 
 
   @HostListener('window:unload', ['$event'])
- unloadHandler(event:any) {
-  this.shareService.call({
-    roomID :  this.roomID,
-    from : this.dataValue?.from,
-    to : this.dataValue?.to,
-    peerID : this.dataValue?.contactPeerID,
-    message : 'missed',
-    type: "transfer",
-    created_at : new Date()
-    },"transfer");
-}
-
-
-chunkData(data:any) {
-  const chunkSize = 16384;
-  const chunks = [];
-  for (let i = 0; i < data.byteLength; i += chunkSize) {
-    chunks.push(data.slice(i, i + chunkSize));
+  unloadHandler(event:any) {
+    this.shareService.call({
+      roomID :  this.roomID,
+      from : this.dataValue?.from,
+      to : this.dataValue?.to,
+      peerID : this.dataValue?.contactPeerID,
+      message : 'missed',
+      type: "transfer",
+      created_at : new Date()
+      },"transfer");
   }
-  return chunks;
-}
-
- sendNextChunk(chunks:any) {
-
-  this.connection.on('open',()=>{
-  this.connection.send({
-    type : 'chunk',
-    chunk: chunks[this.currentChunk],
-    chunkNum: this.currentChunk
-  });
-  this.currentChunk++;
-  this.sendProgress(this.currentChunk / chunks.length);
-  if (this.currentChunk < chunks.length) {
-    setTimeout(() =>{
-      this.sendNextChunk(chunks);
-    }, 50);
-  }
-  })
-}
-
- sendProgress(progress:any) {
-
-  this.connection.on('open',()=>{
-    this.connection.send({
-      type: 'progress',
-      progress: progress
-    });
-  });
-  console.log(progress);
-}
-
- updateProgress(progress:any) {
-  console.log(progress);
-}
-
 }

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card [ngClass]="{'cardWidth': ((data$ | async)?.message === 'accepted')}">
   <mat-card-header class="bg-blue-600 text-white">
     <button [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" mat-mini-fab>
       <img class="rounded-xl" alt="" [src]="(data$ | async)?.contactUser?.image ? (data$ | async)?.contactUser?.image : './assets/images/default.png'">
@@ -6,9 +6,16 @@
      <div class="flex justify-center items-center"><span class="text-md">{{(data$ | async)?.contactUser?.username}}</span></div>
     </mat-card-header>
   <mat-card-content class="bg-blue-600 text-white flex justify-center items-center">
-    <div *ngIf="(data$ | async)?.message !== 'accepted';" class="py-2 h-10 flex justify-center items-center">
+    <div *ngIf="(data$ | async)?.message !== 'accepted';else transferBlock" class="py-2 h-10 flex justify-center items-center">
       <div class="text-md">{{(data$ | async)?.message}}</div>
     </div>
+    <ng-template #transferBlock>
+      <div class="w-100 p-2 flex justify-between items-center">
+        <p>{{this.fileData?.name}}</p>
+        <p>{{(progress$ | async) + '%'}}</p>
+      </div>
+      <mat-progress-bar class="py-2" mode="determinate" [value]="(progress$ | async)"></mat-progress-bar>
+    </ng-template>
 </mat-card-content>
   <mat-card-footer class="bg-blue-600 text-white">
     <div class="py-2 flex justify-evenly items-center">
