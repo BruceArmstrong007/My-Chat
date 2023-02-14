@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService, ShareService } from '@client/core';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { CallModalComponent } from '@client/shared';
+import { CallModalComponent, TransferComponent } from '@client/shared';
 
 @Component({
   selector: 'my-chat-app-dashboard',
@@ -49,14 +49,42 @@ export class  DashboardComponent {
         this.closeDialog(res);
       }
       if(res?.message === 'calling'){
-        this.openDialog();
+        this.openDialog(CallModalComponent);
       }
       this.shareService.peerData$.next(res);
     });
+
+
+    this.shareService.transferState$.pipe(distinctUntilChanged(),takeUntil(this.destroy$),map((res:any)=>{
+      let contactID!:number, isCaller = false;
+      if(this.currentUser?.id == res?.from){
+        contactID = parseInt(res?.to);
+        isCaller = true;
+      }
+      if(this.currentUser?.id == res?.to){
+        contactID = parseInt(res?.from);
+      }
+      const contactUser = this.currentUser.contact.find((contact:any) => contact?.id === contactID);
+      return {...res, currentUser : this.currentUser,contactUser : contactUser, isCaller};
+    })).subscribe((res:any)=>{
+      console.log(res);
+
+      // status : request, missed , rejected, cancelled, accepted, received
+      if(!res){
+        return;
+      }
+      if(res?.message === 'missed' || res?.message === 'rejected' || res?.message === 'cancelled' || res?.message === 'received'){
+        this.closeDialog(res);
+      }
+      if(res?.message === 'request'){
+        this.openDialog(TransferComponent);
+      }
+      this.shareService.transferData$.next(res);
+    });
   }
 
-  openDialog(): void {
-    this.dialog.open(CallModalComponent, {
+  openDialog(component:any): void {
+    this.dialog.open(component, {
       enterAnimationDuration: '250ms',
       exitAnimationDuration: '250ms',
       disableClose: true

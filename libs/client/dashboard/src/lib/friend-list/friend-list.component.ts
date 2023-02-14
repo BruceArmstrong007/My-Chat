@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Subject, takeUntil,} from 'rxjs';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ListComponent } from '@client/shared';
+import { ListComponent, PromptComponent } from '@client/shared';
 import { ChangeDetectionStrategy, Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PromptHandlerService, AuthService, UserService, RequestHandlerService } from '@client/core';
@@ -45,7 +45,7 @@ ngAfterViewInit(){
 
 
     this.acceptRequest$.subscribe((event:any)=>{
-      this.prompt.openDialog({title : 'Confirmation',description:'Do you want to accept friend request ?'}).subscribe((result:any)=>{
+      this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want to accept friend request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(result && contact_id){
          this.userService.acceptUser({contact_id : event.id,user_id : contact_id})
@@ -66,7 +66,7 @@ ngAfterViewInit(){
 
     this.cancelRequest$.subscribe((eventData:any)=>{
       const event = eventData?.event;
-      this.prompt.openDialog({title : 'Confirmation',description:'Do you want to '+event.mode+'?'}).subscribe((result:any)=>{
+      this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want to '+event.mode+'?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(result && contact_id){
          this.userService.unfriendUser({contact_id : event.id,user_id : contact_id})

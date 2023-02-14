@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,7 +50,6 @@ export class CallModalComponent {
 
   toggleAudio(){
     this.enableAudio = !this.enableAudio;
-    console.log(this.localAudioTrack?.enabled);
     this.localAudioTrack.enabled = this.enableAudio;
   }
 
@@ -98,5 +97,18 @@ export class CallModalComponent {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event:any) {
+  this.shareService.call({
+    roomID :  this.roomID,
+    from : this.dataValue?.from,
+    to : this.dataValue?.to,
+    peerID : this.dataValue?.peerID,
+    message : 'missed',
+    type: "call",
+    created_at : new Date()
+    },"videoCall");
+}
 
 }

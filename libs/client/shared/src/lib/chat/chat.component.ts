@@ -36,6 +36,7 @@ export class ChatComponent {
   private readonly shareService = inject(ShareService);
   @Output() sendMessage : any = new EventEmitter();
   @Output() videoCall : any = new EventEmitter();
+  @Output() transferFile : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
   private readonly changeDedection = inject(ChangeDetectorRef);
   disableScrollDown = false
@@ -53,6 +54,7 @@ export class ChatComponent {
   callUser(){
     this.videoCall.emit();
   }
+
 
   ngAfterViewInit() {
     // Inject our custom logic of menu close
@@ -108,5 +110,12 @@ ngOnDestroy(){
   this.destroy$.next();
   this.destroy$.complete();
 }
+
+files(data:any){
+  const file = data?.files[0] ? data?.files[0] : null;
+  this.transferFile.emit(file);
+}
+
+
 }
 

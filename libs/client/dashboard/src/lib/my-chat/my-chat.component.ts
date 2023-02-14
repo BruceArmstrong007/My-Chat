@@ -18,6 +18,7 @@ export class MyChatComponent {
   sendMessage$: any = new Subject();
   videoCall$: any = new Subject();
   cardClick$: any = new Subject();
+  fileTransfer$ : any = new Subject();
   contactUser:any;
   messageList$: any = new Subject();
   private readonly destroy$ = new Subject<void>();
@@ -69,6 +70,25 @@ ngAfterViewInit(){
       created_at : new Date()
     };
     this.shareService.call(data,"videoCall");
+  });
+
+  this.fileTransfer$.pipe(takeUntil(this.destroy$)).subscribe((file:File)=>{
+
+    const user_id = this.authService.currentUser()?.id;
+    const contact_id = this.contactUser?.id;
+    const id = this.authService.generateRoomID(user_id,contact_id);
+    const data = {
+      roomID : id,
+      from : user_id,
+      to : contact_id,
+      contactPeerID : null,
+      message : "request",
+      type : "transfer",
+      created_at : new Date(),
+      file : file,
+      extra : JSON.stringify({name : file.name, size : file.size, mime : file.type, type : file.name.split(".").pop()})
+    };
+    this.shareService.transfer(data,'transfer');
   });
 
   }

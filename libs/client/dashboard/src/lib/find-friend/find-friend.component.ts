@@ -2,7 +2,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, PromptHandlerService, UserService, RequestHandlerService } from '@client/core';
 import { Subject, distinctUntilChanged, takeUntil,  map, BehaviorSubject } from 'rxjs';
-import { ListComponent } from '@client/shared';
+import { ListComponent, PromptComponent } from '@client/shared';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -30,7 +30,7 @@ export class FindFriendComponent {
 
   ngAfterViewInit(){
     this.addRequest$.subscribe((event:any)=>{
-      this.prompt.openDialog({title : 'Confirmation',description:'Do you want send request ?'}).subscribe((result:any)=>{
+      this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want send request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(!result || !contact_id){
           return;
@@ -38,7 +38,7 @@ export class FindFriendComponent {
          this.userService.requestUser({contact_id : event.id,user_id : contact_id})
          .pipe(takeUntil(this.destroy$))
          .subscribe((data:any) => {
-            this.findList$.next(this.findList$.value.map((user:any)=>{ 
+            this.findList$.next(this.findList$.value.map((user:any)=>{
               if(user.id === event.id){
                 return {
                   ...user,
@@ -54,7 +54,7 @@ export class FindFriendComponent {
 
 
     this.cancelRequest$.subscribe((event:any)=>{
-      this.prompt.openDialog({title : 'Confirmation',description:'Do you want to cancel request ?'}).subscribe((result:any)=>{
+      this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want to cancel request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(!result || !contact_id){
           return;

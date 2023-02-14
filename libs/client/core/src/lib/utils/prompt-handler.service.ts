@@ -1,4 +1,3 @@
-import { PromptComponent } from '@client/shared';
 import { inject, Injectable } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 @Injectable({
@@ -7,8 +6,8 @@ import {MatDialog} from '@angular/material/dialog';
 export class PromptHandlerService {
   dialog = inject(MatDialog);
 
-  openDialog(data:any){
-    const dialogRef = this.dialog.open(PromptComponent, {
+  openDialog(component: any, data:any){
+    const dialogRef = this.dialog.open(component, {
       width: '500px',
       data:data,
     });

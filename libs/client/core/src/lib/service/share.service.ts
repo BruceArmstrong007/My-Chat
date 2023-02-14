@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
-import io, { Socket } from 'socket.io-client';
+import  { Socket } from 'socket.io-client';
 import { inject, Injectable } from '@angular/core';
 import { injectConfig } from '../core.di';
 import { UserService } from './user.service';
@@ -13,8 +13,10 @@ export class ShareService {
   private readonly notifications$ = new Subject();
   private readonly userService = inject(UserService);
   peerData$ : any = new BehaviorSubject(undefined);
+  transferData$ : any = new BehaviorSubject(undefined);
   localStream$: BehaviorSubject<any>= new BehaviorSubject(null);
   remoteStream$ : BehaviorSubject<any>= new BehaviorSubject(null);
+  transferState$ : BehaviorSubject<any>= new BehaviorSubject(null);
   readonly callState$ : any = new BehaviorSubject(undefined);
   private readonly url = injectConfig();
   private socket : Socket = this.userService.socket;
@@ -42,6 +44,19 @@ export class ShareService {
         return;
       }
       this.callState$.next(data);
+    });
+
+    this.socket.on("transfer",(data:any)=>{
+      console.log(data);
+
+      if(this.authService.generateRoomID(this.userService.chatMessages$.value[0]?.from,this.userService.chatMessages$.value[0]?.to) === data?.roomID){
+        this.userService.chatMessages$.next([...this.userService.chatMessages$.value,data]);
+      }
+      const value =  this.transferState$.value;
+      if(value && data && value?.roomID !== data?.roomID && value?.message === 'accepted'){
+        return;
+      }
+      this.transferState$.next(data);
     });
 
     this.socket.on("error", (error:any) => {
@@ -80,6 +95,11 @@ export class ShareService {
       if(this.authService.generateRoomID(this.userService.chatMessages$.value[0]?.from,this.userService.chatMessages$.value[0]?.to) === data?.roomID){
       this.userService.chatMessages$.next([...this.userService.chatMessages$.value,data]);
     }
+  }
+
+  transfer(data:any, option: string){
+    this.socket.emit(option,{...data,file:null});
+    this.transferState$.next(data);
   }
 
 
