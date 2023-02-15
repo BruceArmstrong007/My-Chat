@@ -1,13 +1,11 @@
-import { getGreeting } from '../support/app.po';
+import { h1 } from '../support/app.po';
 
-describe('client', () => {
+describe('MyChat', () => {
   beforeEach(() => cy.visit('/'));
 
-  it('should display welcome message', () => {
-    // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword');
-
-    // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome client');
+  it('should display', () => {
+    cy.title().should('eq','My Chat');
+    h1().contains('My Chat');
   });
+
 });

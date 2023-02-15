@@ -18,6 +18,7 @@
     "@angular/cli": "~15.1.0",
     "@angular/compiler-cli": "~15.1.0",
     "@angular/language-service": "~15.1.0",
+    "@cypress/xpath": "^2.0.3",
     "@nrwl/angular": "^15.6.3",
     "@nrwl/cypress": "15.6.3",
     "@nrwl/eslint-plugin-nx": "15.6.3",

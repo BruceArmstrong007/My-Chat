@@ -8,17 +8,14 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare namespace Cypress {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface Chainable<Subject> {
-    login(email: string, password: string): void;
-  }
-}
+import { submitTag, usernameTag, passwordTag } from "./app.po";
+
 //
 // -- This is a parent command --
-Cypress.Commands.add('login', (email, password) => {
-  console.log('Custom command example: Login', email, password);
+Cypress.Commands.add('login', (username:string, password:string) => {
+  usernameTag().type(username);
+  passwordTag().type(password);
+  submitTag().click();
 });
 //
 // -- This is a child command --
