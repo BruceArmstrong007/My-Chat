@@ -115,8 +115,13 @@ export class FindFriendComponent {
   }
 
   ngOnDestroy(){
+    this.findList$.unsubscribe();
+    this.addRequest$.unsubscribe();
+    this.findFriend$.unsubscribe();
+    this.cancelRequest$.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }
 

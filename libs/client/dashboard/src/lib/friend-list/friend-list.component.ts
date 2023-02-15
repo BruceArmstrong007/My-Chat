@@ -89,6 +89,13 @@ ngAfterViewInit(){
   }
 
   ngOnDestroy(){
+
+    this.chatFriend$.unsubscribe();
+    this.cancelRequest$.unsubscribe();
+    this.acceptRequest$.unsubscribe();
+    this.friendList$.unsubscribe();
+    this.sentList$.unsubscribe();
+    this.receivedList$.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
   }

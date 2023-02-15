@@ -18,24 +18,24 @@
           <p class="text-sm">
             <ng-container *ngIf="chat.from === currentUser?.id;else elseCall">
               <span *ngIf="chat?.message === 'received'">
-                <mat-icon class="text-green-600 scale-75">call_received</mat-icon> : You had a call with {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-green-600 scale-75">call_received</mat-icon> : You had a call with {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'rejected'">
-              <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : Your call was rejected by {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+              <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : Your call was rejected by {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
-                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : Your call was missed by {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : Your call was missed by {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
             </ng-container>
             <ng-template #elseCall>
               <span *ngIf="chat?.message === 'received'">
-                <mat-icon class="text-green-600 scale-75">call_received</mat-icon> : You had a call with {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-green-600 scale-75">call_received</mat-icon> : You had a call with {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'rejected'">
-                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : You rejected a call from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : You rejected a call from {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
-                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : You missed a call from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-red-600 scale-75">call_missed</mat-icon> : You missed a call from {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
             </ng-template>
           </p>
@@ -46,24 +46,24 @@
           <p class="text-sm">
             <ng-container *ngIf="chat.from === currentUser?.id;else elseTransfer">
               <span *ngIf="chat?.message === 'received'">
-                <mat-icon class="text-green-600 scale-75">cloud_done</mat-icon> : your file was transfered to {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-green-600 scale-75">cloud_done</mat-icon> : your file was transfered to {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'rejected'">
-              <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : {{contactUser.username}} rejected your file transfer on {{chat?.created_at | date : 'short'}}
+              <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : {{contactUser?.username}} rejected your file transfer on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
-                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : Your file transfer was missed by {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : Your file transfer was missed by {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
             </ng-container>
             <ng-template #elseTransfer>
               <span *ngIf="chat?.message === 'received'">
-                <mat-icon class="text-green-600 scale-75">cloud_done</mat-icon> : You had a file transfer from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-green-600 scale-75">cloud_done</mat-icon> : You had a file transfer from {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'rejected'">
-                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : You rejected a file transfer from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : You rejected a file transfer from {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
               <span *ngIf="chat?.message === 'missed' || chat?.message === 'cancelled'">
-                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : You missed a file transfer from {{contactUser.username}} on {{chat?.created_at | date : 'short'}}
+                <mat-icon class="text-red-600 scale-75">cloud_off</mat-icon> : You missed a file transfer from {{contactUser?.username}} on {{chat?.created_at | date : 'short'}}
               </span>
             </ng-template>
           </p>

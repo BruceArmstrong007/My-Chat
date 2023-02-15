@@ -30,6 +30,7 @@ export class MyChatComponent {
 
 
 ngAfterViewInit(){
+  this.messageList$ = this.userService.chatMessages$;
   this.contactUser = this.location.getState();
   if(this.contactUser?.id){
     this.startChat(this.contactUser);
@@ -38,7 +39,7 @@ ngAfterViewInit(){
   }
 
 
-  this.friendList$ = this.authService.friends().pipe(takeUntil(this.destroy$))  ;
+  this.friendList$ = this.authService.friends().pipe(takeUntil(this.destroy$));
   this.cardClick$.pipe(takeUntil(this.destroy$))
     .subscribe(this.startChat.bind(this));
 
@@ -108,6 +109,8 @@ ngAfterViewInit(){
 
 
   ngOnDestroy(){
+    this.contactUser = undefined;
+    this.messageList$.next([])
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
