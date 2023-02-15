@@ -8,15 +8,28 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import { submitTag, usernameTag, passwordTag } from "./app.po";
+import { submitTag, usernameTag, passwordTag, confirmPasswordTag } from "./app.po";
 
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', (username:string, password:string) => {
-  usernameTag().type(username);
-  passwordTag().type(password);
-  submitTag().click();
+  usernameTag().should('be.visible').type(username);
+  passwordTag().should('be.visible').type(password);
+  submitTag().should('be.visible').click();
 });
+
+Cypress.Commands.add('titleH1', (title:string, heading:string) => {
+  cy.title().should('eq', title);
+  cy.contains('h1', heading).should('be.visible');
+});
+
+Cypress.Commands.add('register', (username:string, password:string, confirmPassword:string) => {
+  usernameTag().should('be.visible').type(username);
+  passwordTag().should('be.visible').type(password);
+  confirmPasswordTag().should('be.visible').type(confirmPassword);
+  submitTag().should('be.visible').click();
+});
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })

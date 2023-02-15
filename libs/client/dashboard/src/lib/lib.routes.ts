@@ -8,22 +8,27 @@ export const clientDashboardRoutes: Route[] = [
   },
   {
     path: 'my-chats',
-    loadComponent: () => import('./my-chat/my-chat.component').then(m => m.MyChatComponent)
+    loadComponent: () => import('./my-chat/my-chat.component').then(m => m.MyChatComponent),
+    title : 'Chats'
   },
   {
     path: 'friend-list',
-    loadComponent: () => import('./friend-list/friend-list.component').then(m => m.FriendListComponent)
+    loadComponent: () => import('./friend-list/friend-list.component').then(m => m.FriendListComponent),
+    title : 'Friend List'
   },
   {
     path: 'find-friend',
-    loadComponent: () => import('./find-friend/find-friend.component').then(m => m.FindFriendComponent)
+    loadComponent: () => import('./find-friend/find-friend.component').then(m => m.FindFriendComponent),
+    title : 'Find Friends'
   },
   {
     path: 'reset-password',
-    loadComponent: () => import('@client/auth').then(m => m.ResetPasswordComponent)
+    loadComponent: () => import('@client/auth').then(m => m.ResetPasswordComponent),
+    title : 'Reset Password'
   },
   {
     path: 'profile',
-    loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent)
+    loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent),
+    title : 'Profile'
   }
 ];

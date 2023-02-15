@@ -1,4 +1,4 @@
-export const h1 = () => cy.get('h1');
-export const usernameTag = () => cy.get('input#username');
-export const passwordTag = () => cy.get('input#password');
-export const submitTag = () => cy.get('button#submit');
+export const usernameTag = () => cy.get('#username');
+export const passwordTag = () => cy.get('#password');
+export const confirmPasswordTag = () => cy.get('#confirmPassword');
+export const submitTag = () => cy.get('#submit');

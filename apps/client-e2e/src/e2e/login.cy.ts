@@ -1,16 +1,15 @@
-import { h1 } from "../support/app.po";
 
-describe('login', () => {
+describe('LoginPage', () => {
   beforeEach(() => cy.visit('/login'));
 
   it('should display', () => {
-    cy.title().should('eq','Login');
-    h1().contains('Login');
-
+    cy.titleH1('Login','Login');
   });
 
 
   it('should login',()=>{
-    cy.login("bruce123","12345678");
+    cy.fixture("login").then((data:any)=>{
+    cy.login(data?.username,data?.password);
+    });
   });
 });
