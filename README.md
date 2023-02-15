@@ -9,6 +9,7 @@
  Dark and light mode \
  Video Call Friends, mute audio / video on video call \
  File Transfer
+ Responsive
  
  
 # Commands to run the sever and client locally
@@ -23,7 +24,7 @@
 
 
 # Images
-![image](https://user-images.githubusercontent.com/48177059/218679870-6be20c9c-6db9-47ec-a89c-6d59c355dda6.png)
+![image](https://user-images.githubusercontent.com/48177059/218684001-baee5bb1-9925-4afa-8ad5-bccfc9c59a91.png)
 <img width="960" alt="image" src="https://user-images.githubusercontent.com/48177059/218681852-e285831b-775a-4bf1-8928-cf5419a1a4e5.png">
 <img width="959" alt="image" src="https://user-images.githubusercontent.com/48177059/218678939-41bb4f0c-4bc8-49b7-8d4a-a885bcc9f1b6.png">
 <img width="960" alt="image" src="https://user-images.githubusercontent.com/48177059/217805563-5ac2a9e9-a342-4e29-8d06-d774e6d47a43.png">
