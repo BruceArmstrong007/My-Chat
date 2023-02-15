@@ -1,4 +1,4 @@
-# Trying out new technologies - tRPC , prisma , zod , NX workspace , Tailwind , OnPush with Standalone components
+# Trying out new technologies - tRPC , prisma , zod , NX workspace , Tailwind, cypress e2e, OnPush with Standalone components
 
 # Chat App - Features
  Auth with JWT \
