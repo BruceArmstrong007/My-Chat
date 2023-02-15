@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, tap, Subject, Observable, filter } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, Subject, Observable, filter, map } from 'rxjs';
 
 @Component({
   selector: 'my-chat-app-list',
@@ -53,7 +53,10 @@ export class ListComponent {
       return;
     }
     if(this.search){
-      this.tempList$ = this._list$.pipe(filter((data:any)=> data.name.startsWith(this.search) || data.name.includes(this.search)))
+      this.tempList$ = this._list$.pipe(map((list:any) => list.filter((data:any)=> {
+        return data?.username?.startsWith(this.search) || data?.username?.includes(this.search)
+      })))
+
     }
     else{
       this.populateList();
