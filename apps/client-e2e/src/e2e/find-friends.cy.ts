@@ -1,18 +1,21 @@
+import { FindFriends } from "../components/find-friends";
+import { Login } from "../components/login";
 
 describe('FindFriendPage', () => {
 
+  const login = new Login();
+  const findFriends = new FindFriends();
+
   beforeEach(()=>{
-    cy.visit('/login')
-    cy.fixture("login").then((data:any)=>{
-      cy.intercept('POST', 'http://localhost:3333/api/auth/login').as('login');
-      cy.login(data?.username,data?.password);
-    });
+    login.visitPage();
+    login.interceptAPI();
+    login.login();
   })
 
-  it('should display', () => {
-    cy.wait("@login");
-    cy.visit('/user/find-friend');
-    cy.title().should('eq', "Find Friends");
+  it('should display title and h1', () => {
+    login.waitForAPI();
+    findFriends.visitPage();
+    findFriends.title();
   });
 
 

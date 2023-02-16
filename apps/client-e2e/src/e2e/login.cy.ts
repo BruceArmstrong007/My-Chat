@@ -1,15 +1,18 @@
+import { Login } from "../components/login";
 
 describe('LoginPage', () => {
-  beforeEach(() => cy.visit('/login'));
 
-  it('should display', () => {
-    cy.titleH1('Login','Login');
+  const login = new Login();
+
+  beforeEach(() => login.visitPage());
+
+  it('should display title and h1', () => {
+    login.title();
   });
 
 
+
   it('should login',()=>{
-    cy.fixture("login").then((data:any)=>{
-    cy.login(data?.username,data?.password);
-    });
+    login.login();
   });
 });

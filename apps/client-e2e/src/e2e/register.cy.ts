@@ -1,15 +1,17 @@
+import { Register } from "../components/register";
 
 describe('RegisterPage', () => {
-  beforeEach(() => cy.visit('/register'));
 
-  it('should display', () => {
-    cy.titleH1('Register','Register');
+  const register = new Register();
+
+  beforeEach(() => register.visitPage());
+
+  it('should display title and h1', () => {
+    register.title();
   });
 
 
-  it('should login',()=>{
-    const username = Math.random().toString(36).substring(2, 10);
-    const password = Math.random().toString(36).substring(2, 10);
-    cy.register(username,password,password);
+  it('should register',()=>{
+    register.register();
   });
 });

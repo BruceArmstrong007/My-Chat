@@ -1,9 +1,13 @@
+import { LandingPage } from "../components/landing-page";
 
 describe('LandingPage', () => {
-  beforeEach(() => cy.visit('/'));
 
-  it('should display', () => {
-    cy.titleH1('My Chat','My Chat');
+  const landingPage = new LandingPage();
+
+  beforeEach(() => landingPage.visitPage());
+
+  it('should display title and h1', () => {
+    landingPage.title();
   });
 
 });
