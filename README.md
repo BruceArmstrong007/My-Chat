@@ -10,6 +10,7 @@
  Video Call Friends, mute audio / video on video call \
  File Transfer
  Responsive
+ Added e2e testing
  
  
 # Commands to run the sever and client locally
@@ -18,7 +19,7 @@
 3.) npm run db:migrate \
 4.) npx nx serve client - starts angular client @ port 4200 \
 5.) npx nx serve server - starts trpc http server @ port 3333 \
-6.) npm run db:show - to host visual representation of sqlite DB @ port 5000
+6.) npm run db:show - to host visual representation of sqlite DB @ port 5000 \
 7.) npx nx e2e client-e2e --watch - run E2E automation tests with cypress
 
 
