@@ -49,8 +49,8 @@
 </header>
 
 <mat-menu #profileMenu="matMenu">
-  <button [routerLink]="['/user/profile']" mat-menu-item><mat-icon class="mat-18">edit</mat-icon> Edit Profile</button>
-  <button mat-menu-item  (click)="logout()"><mat-icon class="mat-18">logout</mat-icon>Logout</button>
+  <button id="editProfile" [routerLink]="['/user/profile']" mat-menu-item><mat-icon class="mat-18">edit</mat-icon> Edit Profile</button>
+  <button id="logout" mat-menu-item  (click)="logout()"><mat-icon class="mat-18">logout</mat-icon>Logout</button>
 </mat-menu>
 
 <mat-menu  #notifyMenu="matMenu">

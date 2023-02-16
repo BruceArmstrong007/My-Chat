@@ -1,6 +1,6 @@
 import { Login } from "../components/login";
 
-describe('LoginPage', () => {
+describe('Login', () => {
 
   const login = new Login();
 

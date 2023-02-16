@@ -1,6 +1,6 @@
 import { getTag } from "../support/app.po";
 
-export class Header{
+export class ToolBar{
   companyTitle = "logo";
   chatSection = "chat";
   friendListSection = "friendList";
@@ -10,6 +10,8 @@ export class Header{
   notificationButton = "notification";
   profileMenu = "profileMenu";
   drawerMenu = "drawerMenu";
+  editProfile = "editProfile";
+  logout = "logout";
 
   clickLogo(){
     getTag('#' + this.companyTitle).click();
@@ -45,6 +47,14 @@ export class Header{
 
   clickDrawerMenu(){
     getTag('#' + this.drawerMenu).click();
+  }
+
+  clickEditProfile(){
+    getTag('#' + this.editProfile).click();
+  }
+
+  clickLogout(){
+    getTag('#' + this.logout).click();
   }
 
 }
