@@ -13,8 +13,9 @@ describe('ChatsPage', () => {
   })
 
   it('should display title and h1', () => {
-    login.interceptAPI();
-    chats.title();
+    login.waitForAPI();
+    chats.visitPage();
+    chats.checkTitle();
   });
 
 

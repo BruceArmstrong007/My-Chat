@@ -1,4 +1,4 @@
-import { get } from "../support/app.po";
+import { getTag } from "../support/app.po";
 
 export class Header{
   companyTitle = "logo";
@@ -12,39 +12,39 @@ export class Header{
   drawerMenu = "drawerMenu";
 
   clickLogo(){
-    get('#' + this.companyTitle).click();
+    getTag('#' + this.companyTitle).click();
   }
 
   clickChat(){
-    get('#' + this.chatSection).click();
+    getTag('#' + this.chatSection).click();
   }
 
   clickFriendList(){
-    get('#' + this.friendListSection).click();
+    getTag('#' + this.friendListSection).click();
   }
 
   clickFindFriend(){
-    get('#' + this.findFriendSection).click();
+    getTag('#' + this.findFriendSection).click();
   }
 
   clickReload(){
-    get('#' + this.reloadButton).click();
+    getTag('#' + this.reloadButton).click();
   }
 
   clickTheme(){
-    get('#' + this.themeButton).click();
+    getTag('#' + this.themeButton).click();
   }
 
   clickNotification(){
-    get('#' + this.notificationButton).click();
+    getTag('#' + this.notificationButton).click();
   }
 
   clickProfileMenu(){
-    get('#' + this.profileMenu).click();
+    getTag('#' + this.profileMenu).click();
   }
 
   clickDrawerMenu(){
-    get('#' + this.drawerMenu).click();
+    getTag('#' + this.drawerMenu).click();
   }
 
 }

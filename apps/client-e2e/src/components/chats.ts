@@ -2,7 +2,7 @@ import { titleTag } from "../support/app.po";
 
 export class Chats{
 
-  page = "/user/friend-list";
+  page = "/user/my-chats";
   title = "Chats";
 
 
@@ -11,7 +11,7 @@ export class Chats{
   }
 
   checkTitle(){
-    titleTag().and('eq', this.title);
+    titleTag().should('eq', this.title);
   }
 
 

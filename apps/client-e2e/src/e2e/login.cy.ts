@@ -7,7 +7,7 @@ describe('LoginPage', () => {
   beforeEach(() => login.visitPage());
 
   it('should display title and h1', () => {
-    login.title();
+    login.checkTitle();
   });
 
 

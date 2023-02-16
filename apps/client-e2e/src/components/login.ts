@@ -14,7 +14,7 @@ export class Login{
 
 
   interceptAPI(){
-    cy.intercept('POST', this.loginAPI).as('login');
+    cy.intercept("POST", this.loginAPI).as("login");
   }
 
 

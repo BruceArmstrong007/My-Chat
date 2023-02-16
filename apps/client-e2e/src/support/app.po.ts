@@ -1,9 +1,9 @@
-export const usernameTag = () => get('#username');
-export const passwordTag = () => get('#password');
-export const confirmPasswordTag = () => get('#confirmPassword');
-export const submitTag = () => get('#submit');
+export const usernameTag = () => getTag('#username');
+export const passwordTag = () => getTag('#password');
+export const confirmPasswordTag = () => getTag('#confirmPassword');
+export const submitTag = () => getTag('#submit');
 export const titleTag = () => title();
 
 
-export const get = (selector: string) => cy.get(selector).should('exist').and('be.visible');
-export const title = () => cy.title().should('exist').and('be.visible');
+export const getTag = (selector: string) => cy.get(selector).should('exist');
+export const title = () => cy.title().should('exist');

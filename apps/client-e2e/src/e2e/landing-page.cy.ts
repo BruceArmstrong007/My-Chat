@@ -7,7 +7,7 @@ describe('LandingPage', () => {
   beforeEach(() => landingPage.visitPage());
 
   it('should display title and h1', () => {
-    landingPage.title();
+    landingPage.checkTitle();
   });
 
 });

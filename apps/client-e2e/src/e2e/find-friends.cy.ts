@@ -15,7 +15,7 @@ describe('FindFriendPage', () => {
   it('should display title and h1', () => {
     login.waitForAPI();
     findFriends.visitPage();
-    findFriends.title();
+    findFriends.checkTitle();
   });
 
 

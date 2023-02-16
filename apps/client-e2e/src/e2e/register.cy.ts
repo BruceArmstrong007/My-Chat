@@ -7,7 +7,7 @@ describe('RegisterPage', () => {
   beforeEach(() => register.visitPage());
 
   it('should display title and h1', () => {
-    register.title();
+    register.checkTitle();
   });
 
 
