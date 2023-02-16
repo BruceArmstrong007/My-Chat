@@ -33,7 +33,7 @@ export class AuthService {
 
 
   currentUser(){
-    return  this.currentUser$.getValue();
+    return  this.currentUser$.value;
   }
 
   friends(){
