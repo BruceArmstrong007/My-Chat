@@ -31,6 +31,8 @@ export class CallModalComponent {
   }
 
   ngOnInit(){
+        console.log(this.dataValue?.from,this.dataValue?.to);
+
     this.roomID = this.authService.generateRoomID(this.dataValue?.from,this.dataValue?.to);
 
     this.shareService.localStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
@@ -38,8 +40,8 @@ export class CallModalComponent {
       if(!stream) return;
       this.localAudioTrack = stream.getAudioTracks()[0]; //.find((track:MediaStreamTrack) => track.kind == 'audio')
       this.localVideoTrack = stream.getVideoTracks()[0]; //.find((track:MediaStreamTrack) => track.kind == 'video')
-
-      this.localVideo.nativeElement.srcObject = stream;
+      if(this.localVideo)
+        this.localVideo.nativeElement.srcObject = stream;
     });
     this.shareService.remoteStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
     .subscribe(stream => {
@@ -50,13 +52,14 @@ export class CallModalComponent {
 
   toggleAudio(){
     this.enableAudio = !this.enableAudio;
-    this.localAudioTrack.enabled = this.enableAudio;
+    if(this.localAudioTrack)
+     this.localAudioTrack.enabled = this.enableAudio;
   }
 
   toggleVideo(){
     this.enableVideo = !this.enableVideo;
-    console.log(this.localVideoTrack?.enabled);
-    this.localVideoTrack.enabled = this.enableVideo;
+    if(this.localVideoTrack)
+      this.localVideoTrack.enabled = this.enableVideo;
   }
 
   accept(){
