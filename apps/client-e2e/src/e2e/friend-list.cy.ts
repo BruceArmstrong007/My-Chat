@@ -8,8 +8,8 @@ describe('FriendListPage', () => {
 
 
   beforeEach(()=>{
-    login.visitPage();
     login.interceptAPI();
+    login.visitPage();
     login.loginForm();
   })
 

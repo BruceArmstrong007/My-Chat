@@ -7,8 +7,8 @@ describe('ChatsPage', () => {
   const chats = new Chats();
 
   beforeEach(()=>{
-    login.visitPage();
     login.interceptAPI();
+    login.visitPage();
     login.loginForm();
   })
 
