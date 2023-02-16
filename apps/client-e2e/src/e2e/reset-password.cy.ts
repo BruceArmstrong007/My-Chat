@@ -1,3 +1,4 @@
+import { LandingPage } from "../components/landing-page";
 import { Login } from "../components/login";
 import { Profile } from "../components/profile";
 import { ResetPassword } from "../components/reset-password";
@@ -8,12 +9,14 @@ describe('ResetPassword', () => {
   const login = new Login();
   const toolBar = new ToolBar();
   const profile = new Profile();
+  const landingPage = new LandingPage();
   const resetPassword = new ResetPassword();
 
 
   beforeEach(()=>{
     login.interceptAPI();
-    login.visitPage();
+    landingPage.visitPage();
+    toolBar.clickLogin();
     login.loginForm();
     login.waitForAPI();
     toolBar.clickProfileMenu();

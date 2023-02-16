@@ -8,6 +8,6 @@ export class LandingPage{
   }
 
   visitPage(){
-    cy.visit(this.page)
+    cy.visit(this.page);
   }
 }

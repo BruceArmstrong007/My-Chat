@@ -12,6 +12,8 @@ export class ToolBar{
   drawerMenu = "drawerMenu";
   editProfile = "editProfile";
   logout = "logout";
+  loginButton = "login";
+  registerButton = "register";
 
   clickLogo(){
     getTag('#' + this.companyTitle).click();
@@ -55,6 +57,14 @@ export class ToolBar{
 
   clickLogout(){
     getTag('#' + this.logout).click();
+  }
+
+  clickLogin(){
+    getTag('#' + this.loginButton).click({force:true});
+  }
+
+  clickRegister(){
+    getTag('#' + this.registerButton).click();
   }
 
 }

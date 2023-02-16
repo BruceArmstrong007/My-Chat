@@ -13,8 +13,8 @@
               <ng-template #lightMode>
                 <button  id="theme" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'white','color': 'black'}"><mat-icon>light_mode</mat-icon></button>
               </ng-template>
-              <a *ngIf="!authService.isUserLoggedIn()" [routerLink]="['/login']" routerLinkActive="hidden" mat-button><span class="dark:text-white">Login</span></a>
-              <a  *ngIf="!authService.isUserLoggedIn()" [routerLink]="['/register']" routerLinkActive="hidden" mat-flat-button color="primary">Register</a>
+              <a id="login" *ngIf="!authService.isUserLoggedIn()" [routerLink]="['/login']" routerLinkActive="hidden" mat-button><span class="dark:text-white">Login</span></a>
+              <a id="register" *ngIf="!authService.isUserLoggedIn()" [routerLink]="['/register']" routerLinkActive="hidden" mat-flat-button color="primary">Register</a>
 
               <button  id="notification" *ngIf="authService.isUserLoggedIn()" (click)="hideBadge()" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.6)'}" mat-mini-fab [matMenuTriggerFor]="notifyMenu">
                 <span class="sr-only">notifications</span>
