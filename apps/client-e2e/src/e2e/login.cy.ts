@@ -13,6 +13,6 @@ describe('LoginPage', () => {
 
 
   it('should login',()=>{
-    login.login();
+    login.loginForm();
   });
 });

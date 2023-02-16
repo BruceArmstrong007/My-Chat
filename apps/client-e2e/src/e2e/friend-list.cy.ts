@@ -10,7 +10,7 @@ describe('FriendListPage', () => {
   beforeEach(()=>{
     login.visitPage();
     login.interceptAPI();
-    login.login();
+    login.loginForm();
   })
 
   it('should display title and h1', () => {

@@ -1,8 +1,11 @@
 export class Login{
   page = "/login";
+  title = "Login";
+  h1 = "Login";
+  loginAPI = "http://localhost:3333/api/auth/login";
 
-  title(){
-    cy.titleH1('Login','Login');
+  checkTitle(){
+    cy.titleH1(this.title,this.h1);
   }
 
   visitPage(){
@@ -11,7 +14,7 @@ export class Login{
 
 
   interceptAPI(){
-    cy.intercept('POST', 'http://localhost:3333/api/auth/login').as('login');
+    cy.intercept('POST', this.loginAPI).as('login');
   }
 
 
@@ -20,7 +23,7 @@ export class Login{
   }
 
 
-  login(){
+  loginForm(){
     cy.fixture("login").then((data:any)=>{
       cy.login(data?.username,data?.password);
     });

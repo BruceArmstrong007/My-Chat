@@ -1,45 +1,45 @@
 <header class="header w-full tile">
   <nav class="px-4 md:px-6 py-2.5">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <a [routerLink]="['/']" class="flex items-center">
+          <a id="logo" [routerLink]="['/']" class="flex items-center">
             <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="comment-alt" class="w-6 h-6  dark:text-white" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path fill="currentColor" d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288z"></path>
             </svg> &nbsp;
             <h1 style="margin-bottom: 0;" class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">My Chat</h1>
           </a>
           <div class="flex justify-evenly items-center md:order-2">
-            <button  (click)="reload()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'blue','color': 'white'}"><mat-icon>restart_alt</mat-icon></button>
-                <button *ngIf="this.toggle.darkmode;else lightMode;" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'black','color': 'white'}"><mat-icon>dark_mode</mat-icon></button>
+            <button id="reload" (click)="reload()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'blue','color': 'white'}"><mat-icon>restart_alt</mat-icon></button>
+            <button id="theme" *ngIf="this.toggle.darkmode;else lightMode;" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'black','color': 'white'}"><mat-icon>dark_mode</mat-icon></button>
               <ng-template #lightMode>
-                <button  (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'white','color': 'black'}"><mat-icon>light_mode</mat-icon></button>
+                <button  id="theme" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'white','color': 'black'}"><mat-icon>light_mode</mat-icon></button>
               </ng-template>
               <a *ngIf="!authService.isUserLoggedIn()" [routerLink]="['/login']" routerLinkActive="hidden" mat-button><span class="dark:text-white">Login</span></a>
               <a  *ngIf="!authService.isUserLoggedIn()" [routerLink]="['/register']" routerLinkActive="hidden" mat-flat-button color="primary">Register</a>
 
-              <button  *ngIf="authService.isUserLoggedIn()" (click)="hideBadge()" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.6)'}" mat-mini-fab [matMenuTriggerFor]="notifyMenu">
+              <button  id="notification" *ngIf="authService.isUserLoggedIn()" (click)="hideBadge()" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.6)'}" mat-mini-fab [matMenuTriggerFor]="notifyMenu">
                 <span class="sr-only">notifications</span>
                 <mat-icon [matBadgeHidden]="badgeHidden" matBadge="💡" class="text-black dark:text-white">notifications</mat-icon>
               </button>
 
 
-              <button *ngIf="authService.isUserLoggedIn() && isMobile" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" (click)="menu()" mat-mini-fab >
+              <button id="drawerMenu" *ngIf="authService.isUserLoggedIn() && isMobile" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" (click)="menu()" mat-mini-fab >
                 <span class="sr-only">Open menu</span>
                 <mat-icon class="text-black dark:text-white">menu</mat-icon>
               </button>
 
-              <button *ngIf="authService.isUserLoggedIn()" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" [matMenuTriggerFor]="profileMenu" type="button" mat-mini-fab>
+              <button id="profileMenu" *ngIf="authService.isUserLoggedIn()" [ngStyle]="{'background': 'transparent', 'transform': 'scale(0.8)'}" [matMenuTriggerFor]="profileMenu" type="button" mat-mini-fab>
                 <img class="rounded-xl" alt="" [src]="user?.image ? user?.image : './assets/images/default.png'">
               </button>
           </div>
           <div *ngIf="authService.isUserLoggedIn() && ((toggleMenu && isMobile) || !isMobile)"class=" justify-between items-center w-full md:flex md:w-auto md:order-1" #mobileMenu>
               <ul class="flex mt-2 flex-col font-medium md:flex-row md:space-x-8 md:mt-0">
-                  <li class="index">
+                  <li id="chat" class="index">
                       <a [routerLink]="['/user/my-chats']" (click)="menu()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="rounded-sm dark:bg-blue-500 bg-blue-500 md:bg-blue-500 md:dark:bg-blue-500 md:text-white md:dark:text-black" class="dark:text-white text-black bg-white dark:bg-black hover:bg-slate-200 dark:hover:bg-gray-600 block px-2 py-1 md:px-2 md:py-1">My Chats</a>
                   </li>
-                  <li class="index">
+                  <li id="friendList" class="index">
                       <a [routerLink]="['/user/friend-list']" (click)="menu()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="rounded-sm dark:bg-blue-500 bg-blue-500 md:bg-blue-500 md:dark:bg-blue-500 md:text-white md:dark:text-black" class="dark:text-white text-black bg-white dark:bg-black hover:bg-slate-200 dark:hover:bg-gray-600 block px-2 py-1 md:px-2 md:py-1">Friend list</a>
                   </li>
-                  <li class="index">
+                  <li id="findFriend" class="index">
                       <a [routerLink]="['/user/find-friend']" (click)="menu()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="rounded-sm dark:bg-blue-500 bg-blue-500 md:bg-blue-500 md:dark:bg-blue-500 md:text-white md:dark:text-black" class="dark:text-white text-black bg-white dark:bg-black hover:bg-slate-200 dark:hover:bg-gray-600 block px-2 py-1 md:px-2 md:py-1">Find Friend</a>
                   </li>
               </ul>

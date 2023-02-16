@@ -1,14 +1,17 @@
+import { titleTag } from "../support/app.po";
+
 export class Chats{
 
   page = "/user/friend-list";
+  title = "Chats";
 
 
   visitPage(){
     cy.visit(this.page)
   }
 
-  title(){
-    cy.title().should('eq', "Chats");
+  checkTitle(){
+    titleTag().and('eq', this.title);
   }
 
 

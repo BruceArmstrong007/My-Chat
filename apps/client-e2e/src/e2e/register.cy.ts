@@ -12,6 +12,6 @@ describe('RegisterPage', () => {
 
 
   it('should register',()=>{
-    register.register();
+    register.registerForm();
   });
 });

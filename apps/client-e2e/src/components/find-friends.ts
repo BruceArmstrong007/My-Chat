@@ -1,9 +1,12 @@
+import { titleTag } from "../support/app.po";
+
 export class FindFriends{
 
   page = "/user/find-friend";
+  title = "Find Friends";
 
-  title(){
-    cy.title().should('eq', "Find Friends");
+  checkTitle(){
+    titleTag().and('eq', this.title);
   }
 
   visitPage(){

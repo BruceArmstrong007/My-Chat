@@ -1,8 +1,10 @@
 export class LandingPage{
   page = '/';
+  title = "My Chat";
+  h1 = "My Chat";
 
-  title(){
-    cy.titleH1('My Chat','My Chat');
+  checkTitle(){
+    cy.titleH1(this.title,this.h1);
   }
 
   visitPage(){
