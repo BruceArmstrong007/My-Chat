@@ -8,7 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import { submitTag, usernameTag, passwordTag, confirmPasswordTag, titleTag } from "./app.po";
+import { submitTag, usernameTag, passwordTag, confirmPasswordTag, titleTag, imageURLTag } from "./app.po";
 
 //
 // -- This is a parent command --
@@ -30,6 +30,17 @@ Cypress.Commands.add('register', (username:string, password:string, confirmPassw
   submitTag().click();
 });
 
+Cypress.Commands.add('editProfile', (username:string, image:string) => {
+  usernameTag().clear().type(username);
+  imageURLTag().clear().type(image);
+  submitTag().click();
+});
+
+Cypress.Commands.add('resetPassword', (password:string, confirmPassword:string) => {
+  passwordTag().clear().type(password);
+  confirmPasswordTag().clear().type(confirmPassword);
+  submitTag().click();
+});
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })

@@ -29,6 +29,6 @@ export const clientDashboardRoutes: Route[] = [
   {
     path: 'profile',
     loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent),
-    title : 'Profile'
+    title : 'Edit Profile'
   }
 ];

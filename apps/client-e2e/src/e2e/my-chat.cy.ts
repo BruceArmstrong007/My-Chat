@@ -10,11 +10,11 @@ describe('ChatsPage', () => {
     login.interceptAPI();
     login.visitPage();
     login.loginForm();
+    login.waitForAPI();
+    chats.visitPage();
   })
 
   it('should display title and h1', () => {
-    login.waitForAPI();
-    chats.visitPage();
     chats.checkTitle();
   });
 

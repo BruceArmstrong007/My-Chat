@@ -10,11 +10,11 @@ describe('FindFriendPage', () => {
     login.interceptAPI();
     login.visitPage();
     login.loginForm();
+    login.waitForAPI();
+    findFriends.visitPage();
   })
 
   it('should display title and h1', () => {
-    login.waitForAPI();
-    findFriends.visitPage();
     findFriends.checkTitle();
   });
 

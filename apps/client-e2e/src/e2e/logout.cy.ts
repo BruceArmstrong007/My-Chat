@@ -11,10 +11,10 @@ describe('Logout', () => {
     login.interceptAPI();
     login.visitPage();
     login.loginForm();
+    login.waitForAPI();
   })
 
-  it('should display title and h1', () => {
-    login.waitForAPI();
+  it('should Logout', () => {
     toolBar.clickProfileMenu();
     toolBar.clickLogout();
   });

@@ -11,11 +11,11 @@ describe('FriendListPage', () => {
     login.interceptAPI();
     login.visitPage();
     login.loginForm();
+    login.waitForAPI();
+    friendList.visitPage();
   })
 
   it('should display title and h1', () => {
-    login.waitForAPI();
-    friendList.visitPage();
     friendList.checkTitle();
   });
 
