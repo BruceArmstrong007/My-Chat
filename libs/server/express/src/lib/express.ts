@@ -23,7 +23,7 @@ expressRoutes.use('/message',messageRoutes);
 messageRoutes.use(verifyToken);
 
 
-export const CLIENT_URL = process.env.NODE_ENV == 'production' ? process.env.WEB_CLIENT_URL : process.env.LOCAL_CLIENT_URL;
+export const CLIENT_URL = process.env.NODE_ENVIRONMENT == 'production' ? process.env.WEB_CLIENT_URL : process.env.LOCAL_CLIENT_URL;
 
 // Health Check
 expressRoutes.get('/',(req : Request,res : Response)=> res.json({success : true, message : 'API is working!'}));
