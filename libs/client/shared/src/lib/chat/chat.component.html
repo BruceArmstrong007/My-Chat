@@ -78,12 +78,12 @@
     <div class="w-full h-full" *ngIf="contactUser">
       <button class="w-1/12 p-2 text-green-600" mat-fab-button (click)="callUser()"><mat-icon>call</mat-icon></button>
       <mat-form-field appearance="fill" class="w-10/12">
-        <button class="p-2" matPrefix mat-fab-button (click)="file.click()"><mat-icon>attachment</mat-icon></button>
+        <button class="p-2 dark:text-black" matPrefix mat-fab-button (click)="file.click()"><mat-icon>attachment</mat-icon></button>
         <mat-label>{{messageText}}</mat-label>
         <input matInput [(ngModel)]="message" autocomplete="off">
         <button class="p-2 dark:text-black" matSuffix mat-fab-button [matMenuTriggerFor]="menu"><mat-icon>sentiment_very_satisfied</mat-icon></button>
       </mat-form-field>
-      <button class="w-1/12 p-2" (click)="send()" mat-fab-button><mat-icon color="text-gray-800">send</mat-icon></button>
+      <button class="w-1/12 p-2" (click)="send()" mat-fab-button><mat-icon>send</mat-icon></button>
     </div>
   </div>
 </div>
