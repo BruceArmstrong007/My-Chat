@@ -1,5 +1,5 @@
 export const environment = {
    production: true,
-  apiURL: 'https://my-chat-production.up.railway.app/api',
-  wsURL : 'https://my-chat-production.up.railway.app'
+  apiURL: 'https://my-chat-ickk.onrender.com/api',
+  wsURL : 'https://my-chat-ickk.onrender.com'
 };
