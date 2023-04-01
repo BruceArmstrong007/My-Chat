@@ -11,6 +11,6 @@ export class CustomValidationService {
     if(control.value[key1] !== control.value[key2]){
       return control.controls[key2].setErrors({ mismatch: true });
     }
-    return control.controls[key2].setErrors(null);
+    return control.controls[key2].setErrors({...(control.controls[key2]?.errors || {}),mismatch: false});
   }
 }
