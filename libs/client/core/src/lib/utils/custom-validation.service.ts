@@ -9,8 +9,8 @@ export class CustomValidationService {
 
    MatchValidator(control: any,key1:string,key2:string): ValidationErrors | null {
     if(control.value[key1] !== control.value[key2]){
-       control.controls[key2].setErrors({ mismatch: true });
-      }
-    return null;
+      return control.controls[key2].setErrors({ mismatch: true });
+    }
+    return control.controls[key2].setErrors(null);
   }
 }
