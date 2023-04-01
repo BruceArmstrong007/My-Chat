@@ -9,7 +9,7 @@ export class CustomValidationService {
 
    MatchValidator(control: any,key1:string,key2:string): ValidationErrors | null {
     if(control.value[key1] !== control.value[key2]){
-      return control.controls[key2].setErrors({ mismatch: true });
+      return control.controls[key2].setErrors({ ...(control.controls[key2]?.errors || {}),mismatch: true });
     }
     return control.controls[key2].setErrors({...(control.controls[key2]?.errors || {}),mismatch: false});
   }
