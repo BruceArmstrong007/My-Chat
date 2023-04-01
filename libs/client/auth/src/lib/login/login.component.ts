@@ -8,12 +8,19 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import { Subject,takeUntil } from 'rxjs';
 @Component({
   selector: 'my-chat-app-login',
   standalone: true,
-  imports: [CommonModule,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatButtonModule
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,10 +33,9 @@ export class LoginComponent {
     username : ['',Validators.compose([Validators.required,Validators.minLength(8),Validators.maxLength(15)])],
     password : ['',Validators.compose([Validators.required,Validators.minLength(8),Validators.maxLength(32)])]
   });
-  snackBar = inject(MatSnackBar);
-  private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
-  private readonly destroy$ = new Subject<void>();
+    router = inject(Router);
+    authService = inject(AuthService);
+    destroy$ = new Subject<void>();
 
   send(){
     if(!this.loginForm.valid){
@@ -42,26 +48,24 @@ export class LoginComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response:any) => {
-          if(response?.data?.id){
+          if(response.data.id){
             this.router.navigateByUrl('/user');
             return;
           }
         },
         error: (err:any) => {
           console.log(err);
-
         },
       });
   }
 
   get f(){
-    return (this.loginForm as FormGroup)?.controls;
+    return (this.loginForm as FormGroup).controls;
   }
 
 
   ngOnDestroy(){
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
 }

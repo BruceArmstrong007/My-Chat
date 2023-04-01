@@ -1,6 +1,5 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, RequestHandlerService } from '@client/core';
-import { takeUntil, Subject } from 'rxjs';
+import { takeUntil, Subject, catchError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -20,13 +19,12 @@ import { CustomValidationService } from '@client/core';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  snackBar = inject(MatSnackBar);
   requestHandler = inject(RequestHandlerService);
   formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly customValidation = inject(CustomValidationService);
-  private readonly destroy$ = new Subject<void>();
+  destroy$ = new Subject<void>();
   hide = true;
   confirmHide = true;
   matchValidator = (control : any) => {
@@ -55,7 +53,7 @@ export class RegisterComponent {
   }
 
   get f(){
-    return (this.registerForm as FormGroup)?.controls;
+    return (this.registerForm as FormGroup).controls;
   }
 
   ngOnDestroy(){

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,8 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 describe(LoginComponent.name, () => {
-
-
   beforeEach(() => {
     TestBed.overrideComponent(LoginComponent, {
       add: {
@@ -32,8 +29,7 @@ describe(LoginComponent.name, () => {
   // });
 
   it('types', () => {
-      cy.mount(LoginComponent);
-
+    cy.mount(LoginComponent);
     cy.get('#username').type('bruce123');
     cy.get('#password').type('12345678');
     cy.get('#submit').click();
