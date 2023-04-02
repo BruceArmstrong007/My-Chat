@@ -2,9 +2,9 @@ import { takeUntil, Subject, distinctUntilChanged } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import {  ShareService, ToggleService } from '@client/core';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, inject, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { AuthService } from '@client/core';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatMenuModule} from '@angular/material/menu';
@@ -12,7 +12,7 @@ import {MatMenuModule} from '@angular/material/menu';
 @Component({
   selector: 'my-chat-app-header',
   standalone: true,
-  imports: [CommonModule,RouterModule,MatButtonModule,MatIconModule,MatMenuModule,MatBadgeModule],
+  imports: [NgIf,NgFor,NgStyle,RouterLink,RouterLinkActive,MatButtonModule,MatIconModule,MatMenuModule,MatBadgeModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

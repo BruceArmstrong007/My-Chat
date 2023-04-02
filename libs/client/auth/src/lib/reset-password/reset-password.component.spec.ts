@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResetPasswordComponent } from './reset-password.component';
 import { AuthService, CONFIG_DI_TOKEN, RequestHandlerService, TokenService, UserService } from '@client/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
@@ -34,12 +34,13 @@ describe('ResetPasswordComponent', () => {
   }
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResetPasswordComponent,
+      imports: [
+        ResetPasswordComponent,
         HttpClientModule,
-        BrowserAnimationsModule],
+        BrowserAnimationsModule
+      ],
       providers: [
         {provide : CONFIG_DI_TOKEN, useValue : {}},
-        {provide : HttpClient, useValue : {}},
         {provide : TokenService, useValue : {}},
         {provide: MatSnackBar, useValue : snackBarMock},
         {provide : AuthService, useValue : authServiceMock},

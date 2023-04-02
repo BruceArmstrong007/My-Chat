@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
 import { AuthService, CONFIG_DI_TOKEN, TokenService } from '@client/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
@@ -29,7 +29,6 @@ describe('LoginComponent', () => {
       ],
        providers: [
         {provide : TokenService, useValue : {}},
-        {provide : HttpClient, useValue : {}},
         {provide : CONFIG_DI_TOKEN, useValue : {}},
         {provide : AuthService, useValue: authServiceMock},
         {provide : Router, useValue: mockRouter}

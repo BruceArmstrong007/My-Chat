@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterComponent } from './register.component';
 import { AuthService, CONFIG_DI_TOKEN, TokenService } from '@client/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -26,7 +26,6 @@ describe('RegisterComponent', () => {
       imports: [RegisterComponent, HttpClientModule, BrowserAnimationsModule],
       providers: [
         {provide : TokenService, useValue : {}},
-        {provide : HttpClient, useValue : {}},
         {provide : CONFIG_DI_TOKEN, useValue : {}},
         {provide : AuthService, useValue: authServiceMock},
         {provide : Router, useValue: mockRouter}

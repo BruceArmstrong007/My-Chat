@@ -64,15 +64,10 @@ export class ResetPasswordComponent {
     }
     this.userService.resetPassword(this.resetForm.getRawValue())
     .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (data:any) => {
-        const {message,options} = this.requestHandler.responseHandler(data.message,data.success);
-        this.snackBar.open(message,'Close',options);
-        this.router.navigateByUrl('/');
-      },
-      error: (err:any) => {
-        console.log(err);
-      },
+    .subscribe((data:any) => {
+      const {message,options} = this.requestHandler.responseHandler(data.message,data.success);
+      this.snackBar.open(message,'Close',options);
+      this.router.navigateByUrl('/');
     });
   }
 
