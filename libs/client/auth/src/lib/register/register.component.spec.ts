@@ -5,6 +5,7 @@ import { AuthService, CONFIG_DI_TOKEN, TokenService } from '@client/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { Router } from '@angular/router';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -16,7 +17,7 @@ describe('RegisterComponent', () => {
   };
 
    const authServiceMock = {
-    register: jest.fn().mockReturnValue(of({ })) // create a spy on the login method and return a mock value
+    register: jest.fn().mockReturnValue(of({ success : true, message : 'User registered successfully.'})) // create a spy on the login method and return a mock value
   };
 
   beforeEach(async () => {
@@ -27,7 +28,8 @@ describe('RegisterComponent', () => {
         {provide : TokenService, useValue : {}},
         {provide : HttpClient, useValue : {}},
         {provide : CONFIG_DI_TOKEN, useValue : {}},
-        {provide : AuthService, useValue: {}}
+        {provide : AuthService, useValue: authServiceMock},
+        {provide : Router, useValue: mockRouter}
       ]
     }).compileComponents();
 
@@ -151,42 +153,44 @@ describe('RegisterComponent', () => {
     expect(confirmPassword.errors?.minlength).toBeTruthy();
   });
 
-  // it('Should register on valid response', () => {
-  //   // Arrange
-  //   const formValue = { username: 'testuser', password: 'testpassword', confirmPassword: 'testpassword' };
+  it('Should register on valid response', () => {
+    // Arrange
+    const formValue = { username: 'testuser', password: 'ahsdkasdhakjs', confirmPassword: 'ahsdkasdhakjs' };
 
-  //   jest.spyOn(mockRouter,'navigateByUrl');
-  //   jest.spyOn(authServiceMock, 'register');
+    jest.spyOn(mockRouter,'navigateByUrl');
+    jest.spyOn(authServiceMock, 'register');
 
-  //   // Act
-  //   component.registerForm.setValue(formValue);
-  //   component.send();
+    // Act
+    component.registerForm.setValue(formValue);
+    component.send();
 
-  //   // Assert
-  //   expect(authServiceMock.register).toHaveBeenCalledWith(formValue);
-  //   expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
-  // });
+    // Assert;
+    expect(component.registerForm.value).toBeTruthy();
+    expect(authServiceMock.register).toHaveBeenCalledWith(formValue);
+    expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
+  });
 
-  // it('Should not register on invalid response', () => {
-  //   // Arrange
-  //   const formValue = { username: '', password: 'testpassword', confirmPassword: 'testpassword' };
+  it('Should not register on invalid response', () => {
+    // Arrange
+    const formValue = { username: '', password: 'testpassword', confirmPassword: 'testpassword' };
 
-  //   jest.spyOn(mockRouter,'navigateByUrl');
-  //   jest.spyOn(authServiceMock, 'register');
+    jest.spyOn(mockRouter,'navigateByUrl');
+    jest.spyOn(authServiceMock, 'register');
 
-  //   // Act
-  //   component.registerForm.setValue(formValue);
-  //   component.send();
+    // Act
+    component.registerForm.setValue(formValue);
+    component.send();
 
-  //   // Assert
-  //   expect(authServiceMock.register).not.toHaveBeenCalledWith(formValue);
-  // });
+    // Assert
+    expect(component.registerForm.valid).toBeFalsy();
+    expect(authServiceMock.register).not.toHaveBeenCalledWith(formValue);
+  });
 
 
-  // it('should unsubscribe from observables on destroy', () => {
-  //   jest.spyOn(component.destroy$, 'unsubscribe');
-  //   component.ngOnDestroy();
-  //   expect(component.destroy$.unsubscribe).toHaveBeenCalled();
-  // });
+  it('should unsubscribe from observables on destroy', () => {
+    jest.spyOn(component.destroy$, 'unsubscribe');
+    component.ngOnDestroy();
+    expect(component.destroy$.unsubscribe).toHaveBeenCalled();
+  });
 
 });

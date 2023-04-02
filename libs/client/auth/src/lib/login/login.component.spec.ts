@@ -122,6 +122,7 @@ describe('LoginComponent', () => {
     component.send();
 
     // Assert
+    expect(component.loginForm.valid).toBeFalsy();
     expect(authServiceMock.login).not.toHaveBeenCalled();
   })
 
@@ -138,6 +139,7 @@ describe('LoginComponent', () => {
     component.send();
 
     // Assert
+    expect(component.loginForm.valid).toBeTruthy();
     expect(authServiceMock.login).toHaveBeenCalledWith(formValue);
     expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/user');
   });
@@ -156,6 +158,7 @@ describe('LoginComponent', () => {
       component.send();
 
       // Assert
+    expect(component.loginForm.valid).toBeTruthy();
       expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
   })
 

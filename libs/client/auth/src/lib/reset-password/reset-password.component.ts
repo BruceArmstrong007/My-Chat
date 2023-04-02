@@ -3,7 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, UserService } from '@client/core';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
@@ -23,7 +23,7 @@ export class ResetPasswordComponent {
   private readonly customValidation = inject(CustomValidationService);
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
-  private readonly destroy$: any = new Subject();
+  destroy$: any = new Subject();
   private readonly snackBar = inject(MatSnackBar);
   private readonly requestHandler = inject(RequestHandlerService);
   private readonly router = inject(Router);
@@ -35,7 +35,7 @@ export class ResetPasswordComponent {
 
   constructor(){
     this.resetForm = this.formBuilder.group({
-      id : [Validators.required],
+      id : ['',Validators.required],
       username : ['',Validators.compose([Validators.required,Validators.minLength(8),Validators.maxLength(15)])],
       password : ['',Validators.compose([Validators.required,Validators.minLength(8),Validators.maxLength(32)])],
       confirmPassword : ['',Validators.compose([Validators.required,Validators.minLength(8),Validators.maxLength(32)])]
@@ -47,38 +47,37 @@ export class ResetPasswordComponent {
   ngOnInit(){
     this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe((user:any)=>{
       this.resetForm.patchValue({
-        id : user?.id,
-        username : user?.username
+        id : user.id,
+        username : user.username
       });
     })
   }
 
 
   get f(){
-    return (this.resetForm as FormGroup)?.controls;
+    return (this.resetForm as FormGroup).controls;
   }
 
   send(){
     if(!this.resetForm.valid){
       return;
     }
-      this.userService.resetPassword(this.resetForm.getRawValue())
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data:any) => {
-          const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
-          this.snackBar.open(message,'Close',options);
-          this.router.navigate(['/'])
-        },
-        error: (err:any) => {
-          console.log(err);
-        },
-      });
+    this.userService.resetPassword(this.resetForm.getRawValue())
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data:any) => {
+        const {message,options} = this.requestHandler.responseHandler(data.message,data.success);
+        this.snackBar.open(message,'Close',options);
+        this.router.navigateByUrl('/');
+      },
+      error: (err:any) => {
+        console.log(err);
+      },
+    });
   }
 
 
   ngOnDestroy(){
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }

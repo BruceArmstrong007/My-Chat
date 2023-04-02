@@ -1,5 +1,5 @@
 import { AuthService, RequestHandlerService } from '@client/core';
-import { takeUntil, Subject, catchError } from 'rxjs';
+import { takeUntil, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -45,11 +45,11 @@ export class RegisterComponent {
     if(!this.registerForm.valid){
       return;
     }
-      this.authService.register(this.registerForm.getRawValue())
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-          this.router.navigateByUrl('/login');
-      });
+    this.authService.register(this.registerForm.getRawValue())
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
+        this.router.navigateByUrl('/login');
+    });
   }
 
   get f(){
@@ -57,7 +57,6 @@ export class RegisterComponent {
   }
 
   ngOnDestroy(){
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 }
