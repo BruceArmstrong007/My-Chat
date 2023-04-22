@@ -2,7 +2,7 @@ import { IS_LOGGED_STORAGE_KEY } from '../config/auth.config';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '@prisma/client';
-import { BehaviorSubject, iif, map, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, delay, iif, map, of, retryWhen, switchMap, take, tap, timeout, timer } from 'rxjs';
 import { injectToken } from '../core.di';
 import { HttpService } from '../utils/http.service';
 import { injectConfig } from '../core.di';
@@ -89,6 +89,18 @@ export class AuthService {
 
   getAccess() {
     return  this.http.get('/auth/accessToken').pipe(
+      timeout(5000),
+      retryWhen(errors => {
+        return errors.pipe(
+          delay(1000),
+          take(1),
+          switchMap(() => {
+            localStorage.removeItem(IS_LOGGED_STORAGE_KEY);
+            window.location.reload()
+            return timer(0);
+          })
+        );
+        }),
       tap((response:any) => {
         this.token.setAccessToken(response?.data?.token);
       }),
