@@ -40,7 +40,7 @@ export class LoginComponent {
     destroy$ : any = new Subject();
     destroyRef = inject(DestroyRef);
 
-    constructor(){
+    ngOnInit(){
       this.destroyRef.onDestroy(()=>{
         this.destroy$.unsubscribe();
       })

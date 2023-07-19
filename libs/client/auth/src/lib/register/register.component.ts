@@ -47,6 +47,10 @@ export class RegisterComponent {
       validators : this.matchValidator
     });
 
+
+  }
+
+  ngOnInit(){
     this.destroyRef.onDestroy(()=>{
       this.destroy$.unsubscribe();
     });
