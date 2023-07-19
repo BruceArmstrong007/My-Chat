@@ -3,7 +3,7 @@ import { inject, Injectable, Provider, signal, WritableSignal } from '@angular/c
 @Injectable()
 export class TokenService {
 
-  private readonly accessToken : WritableSignal<string | null> = signal(null);
+  private accessToken : WritableSignal<string | null> = signal(null);
 
   setAccessToken(token: string) {
     this.accessToken.set(token);
