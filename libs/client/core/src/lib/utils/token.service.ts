@@ -11,7 +11,7 @@ export class TokenService {
   }
 
   getAccessToken() {
-    return this.accessToken$.value ? this.accessToken$.value : '';
+    return this.accessToken$.getValue() ?? '';
   }
 }
 
