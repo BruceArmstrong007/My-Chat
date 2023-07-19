@@ -3,14 +3,14 @@ import { inject, Injectable, Provider, signal, WritableSignal } from '@angular/c
 @Injectable()
 export class TokenService {
 
-  private readonly accessToken : WritableSignal<string> = signal('');
+  private readonly accessToken : WritableSignal<string | null> = signal(null);
 
   setAccessToken(token: string) {
     this.accessToken.set(token);
   }
 
   getAccessToken() {
-    return this.accessToken();
+    return this.accessToken() ? this.accessToken() : '';
   }
 }
 
