@@ -78,7 +78,7 @@ export class FindFriendComponent {
 
     });
 
-    this.findFriend$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef)).subscribe((event:any)=>{
+    this.findFriend$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(distinctUntilChanged()).subscribe((event:any)=>{
       if(!event){
         this.findList$.next([]);
         return;
