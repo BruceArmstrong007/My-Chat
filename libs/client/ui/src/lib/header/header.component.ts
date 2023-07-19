@@ -56,9 +56,6 @@ export class HeaderComponent {
     }
   }
 
-  switchMode(){
-    this.toggle.toggle();
-  }
 
   logout(){
     this.authService.logout();

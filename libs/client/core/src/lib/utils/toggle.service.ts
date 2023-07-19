@@ -17,6 +17,10 @@ export class ToggleService {
       this.setCache(this.darkmode());
     }
 
+    mode(){
+      return this.darkmode();
+    }
+
     getMode(){
       const mode = localStorage.getItem('mode');
       return mode ? JSON.parse(mode) : false;
