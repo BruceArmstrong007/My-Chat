@@ -1,19 +1,20 @@
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, UserService } from '@client/core';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, DestroyRef } from '@angular/core';
+import { NgClass, NgIf } from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {CustomValidationService, RequestHandlerService} from '@client/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 @Component({
   selector: 'my-chat-app-reset-password',
   standalone: true,
-  imports: [CommonModule,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
+  imports: [NgIf,NgClass,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +28,9 @@ export class ResetPasswordComponent {
   private readonly snackBar = inject(MatSnackBar);
   private readonly requestHandler = inject(RequestHandlerService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   resetForm!: FormGroup;
+
   matchValidator = (control : any) => {
     return this.customValidation.MatchValidator(control,"password",'confirmPassword');
   }
@@ -42,15 +45,19 @@ export class ResetPasswordComponent {
     },{
       validators : this.matchValidator
     });
+
+    this.destroyRef.onDestroy(()=>{
+      this.destroy$.unsubscribe();
+    });
   }
 
   ngOnInit(){
-    this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe((user:any)=>{
+    this.authService.$user.pipe(takeUntilDestroyed(this.destroy$)).subscribe((user:any)=>{
       this.resetForm.patchValue({
         id : user.id,
         username : user.username
       });
-    })
+    });
   }
 
 
@@ -63,7 +70,7 @@ export class ResetPasswordComponent {
       return;
     }
     this.userService.resetPassword(this.resetForm.getRawValue())
-    .pipe(takeUntil(this.destroy$))
+    .pipe(takeUntilDestroyed(this.destroy$))
     .subscribe((data:any) => {
       const {message,options} = this.requestHandler.responseHandler(data.message,data.success);
       this.snackBar.open(message,'Close',options);
@@ -72,7 +79,4 @@ export class ResetPasswordComponent {
   }
 
 
-  ngOnDestroy(){
-    this.destroy$.unsubscribe();
-  }
 }

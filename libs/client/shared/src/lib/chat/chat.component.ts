@@ -1,19 +1,19 @@
 import { CardComponent } from './../card/card.component';
-import { Observable, Subject,filter, takeUntil, distinctUntilChanged } from 'rxjs';
+import { Observable, Subject,filter} from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ViewEncapsulation, ChangeDetectionStrategy, Component, inject, ViewChild, EventEmitter, Output, Input, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ToggleService, ShareService } from '@client/core';
+import { ViewEncapsulation, ChangeDetectionStrategy, Component, inject, ViewChild, EventEmitter, Output, Input, HostListener} from '@angular/core';
+import { ToggleService } from '@client/core';
 import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { NgFor, NgIf, DatePipe, AsyncPipe } from '@angular/common';
 @Component({
   selector: 'my-chat-app-chat',
   standalone: true,
-  imports: [CommonModule,MatFormFieldModule,MatInputModule,MatIconModule,FormsModule,MatMenuModule,MatButtonModule,CardComponent,PickerModule],
+  imports: [NgFor,NgIf,DatePipe,AsyncPipe,MatFormFieldModule,MatInputModule,MatIconModule,FormsModule,MatMenuModule,MatButtonModule,CardComponent,PickerModule],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,13 +33,10 @@ export class ChatComponent {
   }
   message = '';
   toggle : any = inject(ToggleService);
-  private readonly destroy$ = new Subject<void>();
-  private readonly shareService = inject(ShareService);
   @Output() sendMessage : any = new EventEmitter();
   @Output() videoCall : any = new EventEmitter();
   @Output() transferFile : any = new EventEmitter();
   @ViewChild('scrollMe') private scrollMe: any;
-  private readonly changeDedection = inject(ChangeDetectorRef);
   disableScrollDown = false
   @ViewChild('menu') pickerMenu!: MatMenu;
   send(){
@@ -107,10 +104,6 @@ keyEvent(event: KeyboardEvent) {
 }
 
 
-ngOnDestroy(){
-  this.destroy$.next();
-  this.destroy$.complete();
-}
 
 files(data:any){
   const file = data?.files[0] ? data?.files[0] : null;

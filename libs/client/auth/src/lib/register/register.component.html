@@ -20,8 +20,8 @@
     <div class="p-2">
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Password</mat-label>
-        <input id="password" matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-        <mat-icon [ngClass]="{'text-blue-700' : !f['password'].valid, 'text-green-400' :  f['password'].valid}" matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input id="password" matInput [type]="hide() ? 'password' : 'text'" formControlName="password">
+        <mat-icon [ngClass]="{'text-blue-700' : !f['password'].valid, 'text-green-400' :  f['password'].valid}" matSuffix (click)="toggleVisibility('hide')">{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
         <mat-hint>Enter your password.</mat-hint>
         <mat-error *ngIf="f['password'].hasError('required')">
           Password is <strong>required</strong>
@@ -34,8 +34,8 @@
     <div class="p-2">
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Confirm Password</mat-label>
-        <input  id="confirmPassword" matInput [type]="confirmHide ? 'password' : 'text'" formControlName="confirmPassword">
-        <mat-icon [ngClass]="{'text-blue-700' : !f['password'].valid, 'text-green-400' :  f['password'].valid}" matSuffix (click)="confirmHide = !confirmHide">{{confirmHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input  id="confirmPassword" matInput [type]="confirmHide() ? 'password' : 'text'" formControlName="confirmPassword">
+        <mat-icon [ngClass]="{'text-blue-700' : !f['password'].valid, 'text-green-400' :  f['password'].valid}" matSuffix (click)="toggleVisibility('confirmHide')">{{confirmHide() ? 'visibility_off' : 'visibility'}}</mat-icon>
         <mat-hint>Enter your password.</mat-hint>
         <mat-error *ngIf="f['confirmPassword'].hasError('required')">
           Password is <strong>required</strong>

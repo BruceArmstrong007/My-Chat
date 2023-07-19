@@ -1,17 +1,16 @@
-import { inject, Injectable, Provider } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable, Provider, signal, WritableSignal } from '@angular/core';
 
 @Injectable()
 export class TokenService {
 
-  private readonly accessToken$ = new BehaviorSubject<string | null>(null);
+  private readonly accessToken : WritableSignal<string> = signal('');
 
   setAccessToken(token: string) {
-    this.accessToken$.next(token);
+    this.accessToken.set(token);
   }
 
   getAccessToken() {
-    return this.accessToken$.getValue() ?? '';
+    return this.accessToken();
   }
 }
 

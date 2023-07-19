@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -7,11 +6,12 @@ import { AuthService, ShareService } from '@client/core';
 import { BehaviorSubject, takeUntil, Subject } from 'rxjs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { FileSizePipe } from '../file-size.pipe';
+import { NgIf, AsyncPipe, TitleCasePipe, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'my-chat-transfer',
   standalone: true,
-  imports: [CommonModule,MatIconModule,MatButtonModule,MatCardModule,MatProgressBarModule,FileSizePipe],
+  imports: [NgIf,NgStyle,AsyncPipe,TitleCasePipe,MatIconModule,MatButtonModule,MatCardModule,MatProgressBarModule,FileSizePipe],
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,8 +115,8 @@ export class TransferComponent {
 
    readNextChunk() {
     this.progress$.next(((this.currentChunk * this.BYTES_PER_CHUNK / this.file.size) * 100).toFixed(2));
-    let start = this.BYTES_PER_CHUNK * this.currentChunk;
-    let end = Math.min( this.file.size, start + this.BYTES_PER_CHUNK );
+    const start = this.BYTES_PER_CHUNK * this.currentChunk;
+    const end = Math.min( this.file.size, start + this.BYTES_PER_CHUNK );
     this.fileReader.readAsArrayBuffer( this.file.slice( start, end ) );
 }
 

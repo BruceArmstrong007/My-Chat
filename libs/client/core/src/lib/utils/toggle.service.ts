@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToggleService {
-  public darkmode = false;
-  
+  public darkmode : WritableSignal<boolean> = signal(false);
+
   constructor() {
-    this.darkmode = this.getMode();
-    this.setMode(this.darkmode);
-    
+    this.darkmode.set(this.getMode());
+    this.setCache(this.darkmode());
+
   }
 
     toggle(){
-      this.darkmode = !this.darkmode;
-      this.setMode(this.darkmode);
+      this.darkmode.update((darkMode : boolean)=> !darkMode);
+      this.setCache(this.darkmode());
     }
 
     getMode(){
@@ -22,7 +22,7 @@ export class ToggleService {
       return mode ? JSON.parse(mode) : false;
     }
 
-    setMode(darkmode : boolean){
+    setCache(darkmode : boolean){
       localStorage.setItem('mode',JSON.stringify(darkmode));
     }
 }

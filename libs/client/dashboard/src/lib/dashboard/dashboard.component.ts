@@ -1,15 +1,15 @@
-import { takeUntil, Subject, distinctUntilChanged, map } from 'rxjs';
+import { Subject, distinctUntilChanged, map } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, DestroyRef } from '@angular/core';
 import { AuthService, ShareService } from '@client/core';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { CallModalComponent, TransferComponent } from '@client/shared';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'my-chat-app-dashboard',
   standalone: true,
-  imports: [CommonModule,RouterOutlet,MatDialogModule],
+  imports: [RouterOutlet,MatDialogModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,18 +17,19 @@ import { CallModalComponent, TransferComponent } from '@client/shared';
 export class  DashboardComponent {
   shareService = inject(ShareService);
   authService = inject(AuthService);
+  destroyRef = inject(DestroyRef);
   currentUser : any;
   private readonly destroy$ : any = new Subject();
   dialog : MatDialog = inject(MatDialog);
   ngOnInit(){
-    this.authService.$user.pipe(takeUntil(this.destroy$)).subscribe((user:any)=>{
+    this.authService.$user.pipe(takeUntilDestroyed(this.destroy$)).subscribe((user:any)=>{
       if(user?.id){
       this.currentUser = user;
       this.shareService.connectWs(user?.id,user?.contact);
       }
     });
 
-    this.shareService.callState$.pipe(distinctUntilChanged(),takeUntil(this.destroy$),map((res:any)=>{
+    this.shareService.callState$.pipe(distinctUntilChanged(),takeUntilDestroyed(this.destroy$),map((res:any)=>{
 
       let contactID!:number, isCaller = false;
       if(this.currentUser?.id == res?.from){
@@ -55,7 +56,7 @@ export class  DashboardComponent {
     });
 
 
-    this.shareService.transferState$.pipe(distinctUntilChanged(),takeUntil(this.destroy$),map((res:any)=>{
+    this.shareService.transferState$.pipe(distinctUntilChanged(),takeUntilDestroyed(this.destroy$),map((res:any)=>{
       let contactID!:number, isCaller = false;
       if(this.currentUser?.id == res?.from){
         contactID = parseInt(res?.to);
@@ -80,6 +81,9 @@ export class  DashboardComponent {
       }
       this.shareService.transferData$.next(res);
     });
+
+
+    this.destroyRef.onDestroy(()=> this.destroy$.unsubscribe())
   }
 
   openDialog(component:any): void {
@@ -97,8 +101,4 @@ export class  DashboardComponent {
     }
   }
 
-  ngOnDestroy(){
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 }

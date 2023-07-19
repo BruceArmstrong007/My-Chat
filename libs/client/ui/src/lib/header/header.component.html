@@ -9,7 +9,7 @@
           </a>
           <div class="flex justify-evenly items-center md:order-2">
             <button id="reload" (click)="reload()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'blue','color': 'white'}"><mat-icon>restart_alt</mat-icon></button>
-            <button id="theme" *ngIf="this.toggle.darkmode;else lightMode;" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'black','color': 'white'}"><mat-icon>dark_mode</mat-icon></button>
+            <button id="theme" *ngIf="this.toggle.darkmode();else lightMode;" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'black','color': 'white'}"><mat-icon>dark_mode</mat-icon></button>
               <ng-template #lightMode>
                 <button  id="theme" (click)="switchMode()" mat-mini-fab [ngStyle]="{'transform': 'scale(0.6)','background-color': 'white','color': 'black'}"><mat-icon>light_mode</mat-icon></button>
               </ng-template>

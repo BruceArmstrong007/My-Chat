@@ -1,15 +1,15 @@
 import { UserService, AuthService, ShareService } from '@client/core';
 import { Location } from '@angular/common';
-import {  Observable, Subject, takeUntil } from 'rxjs';
 import { ChatComponent } from '@client/shared';
 import { ListComponent } from '@client/shared';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, DestroyRef } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'my-chat-app-my-chat',
   standalone: true,
-  imports: [CommonModule, ListComponent, ChatComponent],
+  imports: [ListComponent, ChatComponent],
   templateUrl: './my-chat.component.html',
   styleUrls: ['./my-chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,11 +21,12 @@ export class MyChatComponent {
   fileTransfer$ : any = new Subject();
   contactUser:any;
   messageList$: any = new Subject();
-  private readonly destroy$ = new Subject<void>();
+  private readonly destroy$ : any = new Subject<void>();
   readonly userService = inject(UserService);
   readonly shareService = inject(ShareService);
   readonly authService = inject(AuthService);
   private readonly location = inject(Location);
+  private readonly destroyRef = inject(DestroyRef);
   friendList$!:Observable<any[]>;
 
 
@@ -39,11 +40,11 @@ ngAfterViewInit(){
   }
 
 
-  this.friendList$ = this.authService.friends().pipe(takeUntil(this.destroy$));
-  this.cardClick$.pipe(takeUntil(this.destroy$))
+  this.friendList$ = this.authService.friends().pipe(takeUntilDestroyed(this.destroy$));
+  this.cardClick$.pipe(takeUntilDestroyed(this.destroy$))
     .subscribe(this.startChat.bind(this));
 
-  this.sendMessage$.pipe(takeUntil(this.destroy$))
+  this.sendMessage$.pipe(takeUntilDestroyed(this.destroy$))
   .subscribe((event:any) => {
     const user_id = this.authService.currentUser()?.id;
     const contact_id = this.contactUser?.id;
@@ -57,7 +58,7 @@ ngAfterViewInit(){
     this.userService.chat(data);
   });
 
-  this.videoCall$.pipe(takeUntil(this.destroy$)).subscribe(()=>{
+  this.videoCall$.pipe(takeUntilDestroyed(this.destroy$)).subscribe(()=>{
     const user_id = this.authService.currentUser()?.id;
     const contact_id = this.contactUser?.id;
     const id = this.authService.generateRoomID(user_id,contact_id);
@@ -73,7 +74,7 @@ ngAfterViewInit(){
     this.shareService.call(data,"videoCall");
   });
 
-  this.fileTransfer$.pipe(takeUntil(this.destroy$)).subscribe((file:File)=>{
+  this.fileTransfer$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((file:File)=>{
 
     const user_id = this.authService.currentUser()?.id;
     const contact_id = this.contactUser?.id;
@@ -92,6 +93,10 @@ ngAfterViewInit(){
     this.shareService.transfer(data,'transfer');
   });
 
+  this.destroyRef.onDestroy(() => {
+    this.contactUser = undefined;
+    this.destroy$.unsubscribe();
+  })
   }
 
   startChat(contactUser:any)  {
@@ -108,12 +113,5 @@ ngAfterViewInit(){
 
 
 
-  ngOnDestroy(){
-    this.contactUser = undefined;
-    this.messageList$.next([])
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
 
 }

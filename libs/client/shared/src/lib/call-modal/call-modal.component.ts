@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import { AuthService, ShareService } from '@client/core';
-import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
+import { BehaviorSubject, filter, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgStyle, NgIf,AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'my-chat-call-modal',
   standalone: true,
-  imports: [CommonModule,MatIconModule,MatButtonModule,MatCardModule],
+  imports: [NgStyle,NgIf,AsyncPipe,MatIconModule,MatButtonModule,MatCardModule],
   templateUrl: './call-modal.component.html',
   styleUrls: ['./call-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,7 @@ export class CallModalComponent {
   private readonly destroy$ : any = new Subject();
   private readonly shareService = inject(ShareService);
   private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
   data$ : BehaviorSubject<any> = this.shareService?.peerData$;
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
@@ -31,11 +33,10 @@ export class CallModalComponent {
   }
 
   ngOnInit(){
-        console.log(this.dataValue?.from,this.dataValue?.to);
 
     this.roomID = this.authService.generateRoomID(this.dataValue?.from,this.dataValue?.to);
 
-    this.shareService.localStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
+    this.shareService.localStream$.pipe(filter((res:any) => !!res),takeUntilDestroyed(this.destroy$))
     .subscribe((stream:MediaStream) => {
       if(!stream) return;
       this.localAudioTrack = stream.getAudioTracks()[0]; //.find((track:MediaStreamTrack) => track.kind == 'audio')
@@ -43,10 +44,15 @@ export class CallModalComponent {
       if(this.localVideo)
         this.localVideo.nativeElement.srcObject = stream;
     });
-    this.shareService.remoteStream$.pipe(filter((res:any) => !!res),takeUntil(this.destroy$))
+    this.shareService.remoteStream$.pipe(filter((res:any) => !!res),takeUntilDestroyed(this.destroy$))
     .subscribe(stream => {
       if(!stream) return;
       this.remoteVideo.nativeElement.srcObject = stream
+    });
+
+    this.destroyRef.onDestroy(()=> {
+      this.shareService.destroyPeer();
+      this.destroy$.unsubscribe();
     });
   }
 
@@ -94,12 +100,6 @@ export class CallModalComponent {
   }
 
 
-
-  ngOnDestroy(){
-    this.shareService.destroyPeer();
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 
   @HostListener('window:unload', ['$event'])
   unloadHandler(event:any) {

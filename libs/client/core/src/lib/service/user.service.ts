@@ -21,7 +21,7 @@ export class UserService {
 
 
   findUser(data:Pick<User, 'username'>) {
-    return this.http.post('/user/find',data).pipe(map((res:any)=>res?.data));
+    return this.http.post('/user/find',data).pipe(map((response:any)=>response?.data));
   }
 
   requestUser(data:Pick<Contacts, 'user_id' | 'contact_id'>) {

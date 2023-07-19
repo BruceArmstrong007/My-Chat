@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   logout() {
-    this.http.get('/auth/logout').subscribe((res:any)=>{
+    this.http.get('/auth/logout').subscribe(()=>{
       this.router.navigateByUrl('/');
       this.defaultState();
     });
@@ -76,7 +76,7 @@ export class AuthService {
     return this.http.post('/auth/register',user);
   }
 
-  getUser(login: boolean = false){
+  getUser(login = false){
     return this.http.get('/user').pipe(
       map((user:any) => {
         const crntUser = user?.data;
