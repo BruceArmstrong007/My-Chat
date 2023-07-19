@@ -105,6 +105,7 @@ export class FindFriendComponent {
       }))
       .subscribe({
         next: (data:any) => {
+          console.log(data);
             this.findList$.next(data);
         },
         error: (err:any) => {
