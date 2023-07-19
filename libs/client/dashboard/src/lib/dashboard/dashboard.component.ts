@@ -19,17 +19,16 @@ export class  DashboardComponent {
   authService = inject(AuthService);
   destroyRef = inject(DestroyRef);
   currentUser : any;
-  private readonly destroy$ : any = new Subject();
   dialog : MatDialog = inject(MatDialog);
   ngOnInit(){
-    this.authService.$user.pipe(takeUntilDestroyed(this.destroy$)).subscribe((user:any)=>{
+    this.authService.$user.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user:any)=>{
       if(user?.id){
       this.currentUser = user;
       this.shareService.connectWs(user?.id,user?.contact);
       }
     });
 
-    this.shareService.callState$.pipe(distinctUntilChanged(),takeUntilDestroyed(this.destroy$),map((res:any)=>{
+    this.shareService.callState$.pipe(distinctUntilChanged(),takeUntilDestroyed(this.destroyRef),map((res:any)=>{
 
       let contactID!:number, isCaller = false;
       if(this.currentUser?.id == res?.from){
@@ -56,7 +55,7 @@ export class  DashboardComponent {
     });
 
 
-    this.shareService.transferState$.pipe(distinctUntilChanged(),takeUntilDestroyed(this.destroy$),map((res:any)=>{
+    this.shareService.transferState$.pipe(distinctUntilChanged(),takeUntilDestroyed(this.destroyRef),map((res:any)=>{
       let contactID!:number, isCaller = false;
       if(this.currentUser?.id == res?.from){
         contactID = parseInt(res?.to);
@@ -82,8 +81,6 @@ export class  DashboardComponent {
       this.shareService.transferData$.next(res);
     });
 
-
-    this.destroyRef.onDestroy(()=> this.destroy$.unsubscribe())
   }
 
   openDialog(component:any): void {

@@ -8,7 +8,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import { Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'my-chat-app-login',
@@ -37,14 +36,8 @@ export class LoginComponent {
   });
     router = inject(Router);
     authService = inject(AuthService);
-    destroy$ : any = new Subject();
     destroyRef = inject(DestroyRef);
 
-    ngOnInit(){
-      this.destroyRef.onDestroy(()=>{
-        this.destroy$.unsubscribe();
-      })
-    }
 
   send(){
     if(!this.loginForm.valid){
@@ -54,7 +47,7 @@ export class LoginComponent {
 
     this.authService
       .login({ username: formValue.username, password: formValue.password })
-      .pipe(takeUntilDestroyed(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response:any) => {
           if(response.data.id){

@@ -1,5 +1,4 @@
 import { AuthService, RequestHandlerService } from '@client/core';
-import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy, Component, inject, DestroyRef, signal, WritableSignal } from '@angular/core';
 import { NgClass, NgIf } from '@angular/common';
@@ -30,8 +29,7 @@ export class RegisterComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly customValidation = inject(CustomValidationService);
-  private readonly destroyRef = inject(DestroyRef);
-  destroy$ : any = new Subject();
+  destroyRef = inject(DestroyRef);
   hide : WritableSignal<boolean> = signal(true);
   confirmHide : WritableSignal<boolean> = signal(true);
   matchValidator = (control : any) => {
@@ -50,18 +48,12 @@ export class RegisterComponent {
 
   }
 
-  ngOnInit(){
-    this.destroyRef.onDestroy(()=>{
-      this.destroy$.unsubscribe();
-    });
-  }
-
   send(){
     if(!this.registerForm.valid){
       return;
     }
     this.authService.register(this.registerForm.getRawValue())
-    .pipe(takeUntilDestroyed(this.destroy$))
+    .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(() => {
         this.router.navigateByUrl('/login');
     });

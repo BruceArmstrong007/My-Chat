@@ -24,7 +24,6 @@ export class FriendListComponent {
   friendList$: any = new BehaviorSubject([]);
   sentList$: any = new BehaviorSubject([]);
   receivedList$: any = new BehaviorSubject([]);
-  private readonly destroy$ : any = new Subject();
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly prompt = inject(PromptHandlerService);
@@ -34,43 +33,42 @@ export class FriendListComponent {
 
 
 ngAfterViewInit(){
-    this.authService.$user.pipe(takeUntilDestroyed(this.destroy$)).subscribe(((user:any)=>{
+    this.authService.$user.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(((user:any)=>{
       this.sentList$.next(this.contactFilter(user?.contact,'sent'));
       this.friendList$.next(this.contactFilter(user?.contact,'friend'));
       this.receivedList$.next(this.contactFilter(user?.contact,'received'));
     }));
 
-    this.acceptRequest$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((event:any)=>{
+    this.acceptRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event:any)=>{
       this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want to accept friend request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(result && contact_id){
          this.userService.acceptUser({contact_id : event.id,user_id : contact_id})
-         .pipe(takeUntilDestroyed(this.destroy$))
+         .pipe(takeUntilDestroyed(this.destroyRef))
          .subscribe(() => {return});
         }
       });
 
     });
 
-    this.chatFriend$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((event:any)=>{
+    this.chatFriend$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event:any)=>{
       const contact : object = {...event}
       this.router.navigateByUrl('/user', { state : contact });
 
     });
 
-    this.cancelRequest$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((eventData:any)=>{
+    this.cancelRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((eventData:any)=>{
       const event = eventData?.event;
       this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want to '+event.mode+'?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(result && contact_id){
          this.userService.unfriendUser({contact_id : event.id,user_id : contact_id})
-         .pipe(takeUntilDestroyed(this.destroy$))
+         .pipe(takeUntilDestroyed(this.destroyRef))
          .subscribe(() => {return});
         }
       });
     });
 
-    this.destroyRef.onDestroy(()=> this.destroy$.unsubscribe());
   }
 
 

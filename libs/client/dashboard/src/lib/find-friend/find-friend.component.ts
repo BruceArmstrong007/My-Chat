@@ -21,7 +21,6 @@ export class FindFriendComponent {
   findFriend$ : any = new Subject();
   cancelRequest$ : any = new Subject();
   private readonly requestHandler = inject(RequestHandlerService);
-  private readonly destroy$ : any = new Subject();
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
   private readonly snackBar = inject(MatSnackBar);
@@ -30,14 +29,14 @@ export class FindFriendComponent {
 
 
   ngAfterViewInit(){
-    this.addRequest$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((event:any)=>{
+    this.addRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event:any)=>{
       this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want send request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(!result || !contact_id){
           return;
         }
          this.userService.requestUser({contact_id : event.id,user_id : contact_id})
-         .pipe(takeUntilDestroyed(this.destroy$))
+         .pipe(takeUntilDestroyed(this.destroyRef))
          .subscribe(() => {
             this.findList$.next(this.findList$.value.map((user:any)=>{
               if(user.id === event.id){
@@ -54,13 +53,13 @@ export class FindFriendComponent {
     });
 
 
-    this.cancelRequest$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((event:any)=>{
+    this.cancelRequest$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event:any)=>{
       this.prompt.openDialog(PromptComponent,{title : 'Confirmation',description:'Do you want to cancel request ?'}).subscribe((result:any)=>{
         const contact_id = this.authService.currentUser()?.id;
         if(!result || !contact_id){
           return;
         }
-         this.userService.unfriendUser({contact_id : event.id,user_id : contact_id}).pipe(takeUntilDestroyed(this.destroy$))
+         this.userService.unfriendUser({contact_id : event.id,user_id : contact_id}).pipe(takeUntilDestroyed(this.destroyRef))
          .subscribe((data:any) => {
             const {message,options} = this.requestHandler.responseHandler(data?.message,data?.success);
             this.snackBar.open(message,'Close',options);
@@ -79,12 +78,12 @@ export class FindFriendComponent {
 
     });
 
-    this.findFriend$.pipe(takeUntilDestroyed(this.destroy$)).pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroy$)).subscribe((event:any)=>{
+    this.findFriend$.pipe(takeUntilDestroyed(this.destroyRef)).pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef)).subscribe((event:any)=>{
       if(!event){
         this.findList$.next([]);
         return;
       }
-      this.userService.findUser({username : event}).pipe(takeUntilDestroyed(this.destroy$),
+      this.userService.findUser({username : event}).pipe(takeUntilDestroyed(this.destroyRef),
 
       map((userList:any)=> {
         const currentUser : any = this.authService.currentUser();
@@ -114,7 +113,6 @@ export class FindFriendComponent {
       });
     });
 
-    this.destroyRef.onDestroy(() => this.destroy$.unsubscribe());
   }
 
 }

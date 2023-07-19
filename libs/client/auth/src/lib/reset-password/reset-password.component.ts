@@ -1,5 +1,4 @@
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, UserService } from '@client/core';
 import { ChangeDetectionStrategy, Component, inject, DestroyRef } from '@angular/core';
@@ -24,7 +23,6 @@ export class ResetPasswordComponent {
   private readonly customValidation = inject(CustomValidationService);
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
-  destroy$: any = new Subject();
   private readonly snackBar = inject(MatSnackBar);
   private readonly requestHandler = inject(RequestHandlerService);
   private readonly router = inject(Router);
@@ -46,13 +44,10 @@ export class ResetPasswordComponent {
       validators : this.matchValidator
     });
 
-    this.destroyRef.onDestroy(()=>{
-      this.destroy$.unsubscribe();
-    });
   }
 
   ngOnInit(){
-    this.authService.$user.pipe(takeUntilDestroyed(this.destroy$)).subscribe((user:any)=>{
+    this.authService.$user.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user:any)=>{
       this.resetForm.patchValue({
         id : user.id,
         username : user.username
@@ -70,7 +65,7 @@ export class ResetPasswordComponent {
       return;
     }
     this.userService.resetPassword(this.resetForm.getRawValue())
-    .pipe(takeUntilDestroyed(this.destroy$))
+    .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe((data:any) => {
       const {message,options} = this.requestHandler.responseHandler(data.message,data.success);
       this.snackBar.open(message,'Close',options);
