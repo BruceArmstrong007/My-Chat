@@ -13,7 +13,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   providers:[PromptHandlerService],
   templateUrl: './find-friend.component.html',
   styleUrls: ['./find-friend.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FindFriendComponent {
   findList$ : any = new BehaviorSubject([]);
@@ -105,7 +104,6 @@ export class FindFriendComponent {
       }))
       .subscribe({
         next: (data:any) => {
-          console.log(data);
             this.findList$.next(data);
         },
         error: (err:any) => {
