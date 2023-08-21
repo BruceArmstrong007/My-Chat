@@ -2,6 +2,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
 import  { Socket } from 'socket.io-client';
 import { inject, Injectable } from '@angular/core';
+import { injectConfig } from '../core.di';
 import { UserService } from './user.service';
 import Peer from 'peerjs';
 @Injectable({
@@ -17,6 +18,7 @@ export class ShareService {
   remoteStream$ : BehaviorSubject<any>= new BehaviorSubject(null);
   transferState$ : BehaviorSubject<any>= new BehaviorSubject(null);
   readonly callState$ : any = new BehaviorSubject(undefined);
+  private readonly url = injectConfig();
   private socket : Socket = this.userService.socket;
   peer: Peer = new Peer();
   navigator : any = navigator;

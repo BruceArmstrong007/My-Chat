@@ -1,13 +1,13 @@
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
-import { DatePipe, NgClass, NgIf, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'my-chat-app-card',
   standalone: true,
-  imports: [NgIf,NgStyle,NgClass,DatePipe,MatIconModule,MatButtonModule],
+  imports: [CommonModule,MatIconModule,MatButtonModule],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -4,14 +4,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ChangeDetectionStrategy, Component, Input, Output } from '@angular/core';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { distinctUntilChanged, Subject, Observable, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, Subject, Observable, filter, map } from 'rxjs';
 
 @Component({
   selector: 'my-chat-app-list',
   standalone: true,
-  imports: [NgIf,AsyncPipe,MatInputModule,MatIconModule,MatFormFieldModule,FormsModule,CardComponent],
+  imports: [CommonModule,MatInputModule,MatIconModule,MatFormFieldModule,FormsModule,CardComponent],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

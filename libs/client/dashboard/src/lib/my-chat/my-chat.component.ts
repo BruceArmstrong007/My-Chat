@@ -1,14 +1,15 @@
 import { UserService, AuthService, ShareService } from '@client/core';
 import { Location } from '@angular/common';
+import {  Observable, Subject, takeUntil } from 'rxjs';
 import { ChatComponent } from '@client/shared';
 import { ListComponent } from '@client/shared';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'my-chat-app-my-chat',
   standalone: true,
-  imports: [ListComponent, ChatComponent],
+  imports: [CommonModule, ListComponent, ChatComponent],
   templateUrl: './my-chat.component.html',
   styleUrls: ['./my-chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +21,7 @@ export class MyChatComponent {
   fileTransfer$ : any = new Subject();
   contactUser:any;
   messageList$: any = new Subject();
-  private readonly destroy$ : any = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
   readonly userService = inject(UserService);
   readonly shareService = inject(ShareService);
   readonly authService = inject(AuthService);
@@ -91,7 +92,6 @@ ngAfterViewInit(){
     this.shareService.transfer(data,'transfer');
   });
 
-
   }
 
   startChat(contactUser:any)  {
@@ -107,11 +107,13 @@ ngAfterViewInit(){
   }
 
 
+
   ngOnDestroy(){
     this.contactUser = undefined;
+    this.messageList$.next([])
+    this.destroy$.next();
+    this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
-
 
 }

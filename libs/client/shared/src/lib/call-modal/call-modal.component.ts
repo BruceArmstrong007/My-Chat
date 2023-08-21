@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import { AuthService, ShareService } from '@client/core';
-import { BehaviorSubject, filter, Subject, takeUntil } from 'rxjs';
-import { NgStyle, NgIf,AsyncPipe } from '@angular/common';
+import { BehaviorSubject, filter, takeUntil, Subject } from 'rxjs';
 
 @Component({
   selector: 'my-chat-call-modal',
   standalone: true,
-  imports: [NgStyle,NgIf,AsyncPipe,MatIconModule,MatButtonModule,MatCardModule],
+  imports: [CommonModule,MatIconModule,MatButtonModule,MatCardModule],
   templateUrl: './call-modal.component.html',
   styleUrls: ['./call-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +31,7 @@ export class CallModalComponent {
   }
 
   ngOnInit(){
+        console.log(this.dataValue?.from,this.dataValue?.to);
 
     this.roomID = this.authService.generateRoomID(this.dataValue?.from,this.dataValue?.to);
 
@@ -47,7 +48,6 @@ export class CallModalComponent {
       if(!stream) return;
       this.remoteVideo.nativeElement.srcObject = stream
     });
-
   }
 
   toggleAudio(){
@@ -95,6 +95,12 @@ export class CallModalComponent {
 
 
 
+  ngOnDestroy(){
+    this.shareService.destroyPeer();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   @HostListener('window:unload', ['$event'])
   unloadHandler(event:any) {
   this.shareService.call({
@@ -106,11 +112,6 @@ export class CallModalComponent {
     type: "call",
     created_at : new Date()
     },"videoCall");
-}
-
-ngOnDestroy(){
-  this.shareService.destroyPeer();
-  this.destroy$.unsubscribe();
 }
 
 }

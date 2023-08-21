@@ -1,27 +1,22 @@
 import { AuthService, RequestHandlerService } from '@client/core';
+import { takeUntil, Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { ChangeDetectionStrategy, Component, inject, DestroyRef, signal, WritableSignal } from '@angular/core';
-import { NgClass, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import { CustomValidationService } from '@client/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-
-
-type hide = 'hide' | 'confirmHide';
 @Component({
   selector: 'my-chat-app-register',
   standalone: true,
-  imports: [NgIf,NgClass,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
+  imports: [CommonModule,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-
 export class RegisterComponent {
   registerForm: FormGroup;
   requestHandler = inject(RequestHandlerService);
@@ -29,9 +24,9 @@ export class RegisterComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly customValidation = inject(CustomValidationService);
-  destroyRef = inject(DestroyRef);
-  hide : WritableSignal<boolean> = signal(true);
-  confirmHide : WritableSignal<boolean> = signal(true);
+  destroy$ = new Subject<void>();
+  hide = true;
+  confirmHide = true;
   matchValidator = (control : any) => {
     return this.customValidation.MatchValidator(control,"password",'confirmPassword');
   }
@@ -44,8 +39,6 @@ export class RegisterComponent {
     },{
       validators : this.matchValidator
     });
-
-
   }
 
   send(){
@@ -53,7 +46,7 @@ export class RegisterComponent {
       return;
     }
     this.authService.register(this.registerForm.getRawValue())
-    .pipe(takeUntilDestroyed(this.destroyRef))
+    .pipe(takeUntil(this.destroy$))
     .subscribe(() => {
         this.router.navigateByUrl('/login');
     });
@@ -63,16 +56,7 @@ export class RegisterComponent {
     return (this.registerForm as FormGroup).controls;
   }
 
-  toggleVisibility(value : hide){
-    switch(value){
-      case 'hide':
-        this.hide.update((value:boolean) => !value);
-        break;
-      case 'confirmHide':
-        this.confirmHide.update((value:boolean) => !value);
-        break;
-      default:
-    }
-
+  ngOnDestroy(){
+    this.destroy$.unsubscribe();
   }
 }

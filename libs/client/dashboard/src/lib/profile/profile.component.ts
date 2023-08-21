@@ -1,18 +1,19 @@
-import { RouterLink } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService, UserService } from '@client/core';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgIf, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {CustomValidationService} from '@client/core';
+import {CustomValidationService, RequestHandlerService} from '@client/core';
 @Component({
   selector: 'my-chat-app-profile',
   standalone: true,
-  imports: [NgIf,NgClass,RouterLink,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
+  imports: [CommonModule,RouterModule,MatFormFieldModule,MatInputModule,MatIconModule,ReactiveFormsModule,FormsModule,MatButtonModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +24,9 @@ export class ProfileComponent {
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
   private readonly destroy$: any = new Subject();
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly requestHandler = inject(RequestHandlerService);
+  private readonly router = inject(Router);
   profileForm!: FormGroup;
   matchValidator = (control : any) => {
     return this.customValidation.MatchValidator(control,"password",'confirmPassword');
@@ -61,6 +65,8 @@ export class ProfileComponent {
       this.userService.updateProfile(this.profileForm.getRawValue())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
+        next: (data:any) => {
+        },
         error: (err:any) => {
           console.log(err);
         },

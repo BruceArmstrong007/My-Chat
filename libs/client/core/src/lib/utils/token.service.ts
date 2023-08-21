@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class TokenService {
 
-  private accessToken$ : BehaviorSubject<any> = new BehaviorSubject(null);
+  private readonly accessToken$ = new BehaviorSubject<string | null>(null);
 
   setAccessToken(token: string) {
     this.accessToken$.next(token);
