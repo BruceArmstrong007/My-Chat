@@ -24,7 +24,7 @@ responseHandler(message : string, success : boolean){
  }
 
 titleCase(str:string) {
-  return str.toLowerCase().replace(/\b\w/g, (s:string) => s.toUpperCase());
+  return str?.toLowerCase()?.replace(/\b\w/g, (s:string) => s.toUpperCase());
 }
 
 }

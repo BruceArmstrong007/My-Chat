@@ -38,7 +38,7 @@ export class  DashboardComponent {
       if(this.currentUser?.id == res?.to){
         contactID = parseInt(res?.from);
       }
-      const contactUser = this.currentUser.contact.find((contact:any) => contact?.id === contactID);
+      const contactUser = this.currentUser?.contact?.find((contact:any) => contact?.id === contactID);
       return {...res, currentUser : this.currentUser,contactUser : contactUser, isCaller};
     })).subscribe((res:any)=>{
       // status : calling, missed , rejected, cancelled, accepted, received
@@ -64,7 +64,7 @@ export class  DashboardComponent {
       if(this.currentUser?.id == res?.to){
         contactID = parseInt(res?.from);
       }
-      const contactUser = this.currentUser.contact.find((contact:any) => contact?.id === contactID);
+      const contactUser = this.currentUser?.contact?.find((contact:any) => contact?.id === contactID);
       return {...res, currentUser : this.currentUser,contactUser : contactUser, isCaller};
     })).subscribe((res:any)=>{
 
